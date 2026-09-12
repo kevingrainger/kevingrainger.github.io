@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kevin Grainger</title>
+<meta name="description" content="Quantitative analyst working on climate physical risk. Numerical modelling, stochastic processes, earth observation data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #12100e;
+    --fg:      #d7cec1;
+    --dim:     #7e7568;
+    --amber:   #e2a13c;
+    --rule:    #2b2721;
+    --measure: 74ch;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    padding: 4rem 1.5rem 6rem;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 15px;
+    line-height: 1.7;
+    text-align: left;
+  }
+
+  main { max-width: var(--measure); margin: 0 auto; }
+
+  h1 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    margin-left: 0.15em;
+    vertical-align: -0.16em;
+    background: var(--amber);
+    animation: blink 1.15s steps(1, end) infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; }
+  }
+
+  .intro {
+    margin: 1.75rem 0 0;
+    max-width: 66ch;
+  }
+
+  .intro p { margin: 0 0 0.9rem; }
+
+  .meta {
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--dim);
+  }
+
+  .meta li { margin-bottom: 0.2rem; }
+
+  .meta .key {
+    display: inline-block;
+    min-width: 10ch;
+    color: var(--dim);
+  }
+
+  .meta a { color: var(--fg); }
+
+  /* ---- section headings ---- */
+  h2 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--fg);
+    margin: 4.5rem 0 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* ---- projects ---- */
+  .project { margin-top: 3rem; }
+
+  .project h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--amber);
+    margin: 0 0 0.6rem;
+  }
+
+  .project p {
+    margin: 0 0 0.9rem;
+    max-width: 66ch;
+  }
+
+  .project img {
+    display: block;
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    margin: 1.25rem 0 0;
+    border: 1px solid var(--rule);
+    background: #0b0a09;
+  }
+
+  .stack {
+    margin: 0.6rem 0 0;
+    color: var(--dim);
+    font-size: 0.875rem;
+  }
+
+  /* ---- links ---- */
+  a {
+    color: var(--amber);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+  }
+
+  a:hover { background: var(--amber); color: var(--bg); }
+
+  a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+    background: none;
+    color: var(--amber);
+  }
+
+  footer {
+    margin-top: 5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    color: var(--dim);
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 40rem) {
+    body { padding: 2.5rem 1.15rem 4rem; font-size: 14px; }
+    h1 { font-size: 1.15rem; }
+    .meta .key { display: block; min-width: 0; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>Kevin Grainger<span class="cursor" aria-hidden="true"></span></h1>
+
+  <div class="intro">
+    <p>Quantitative analyst in London, working on climate physical risk. I build
+    statistical models from satellite and reanalysis data — Sentinel-2, MODIS,
+    ERA5 — to estimate how physical hazards translate into financial exposure.</p>
+
+    <p>Background in theoretical physics. Most of what I do sits somewhere between
+    numerical methods, stochastic processes and earth observation. Outside work I'm
+    reading toward mathematical ecology and complex systems.</p>
+  </div>
+
+  <ul class="meta">
+    <li><span class="key">cv</span><a href="cv.pdf">cv.pdf</a></li>
+    <li><span class="key">github</span><a href="https://github.com/KevinGrainger">github.com/KevinGrainger</a></li>
+    <li><span class="key">email</span><a href="mailto:you@example.com">you@example.com</a></li>
+  </ul>
+
+  <h2>Projects</h2>
+
+  <article class="project">
+    <h3>Energy portfolio optimisation</h3>
+    <p>Risk-based allocation across renewable and fossil fuel assets using modern
+    portfolio theory, with a GARCH-HMM volatility measure and Monte Carlo
+    simulation over a synthetic €10,000 book.</p>
+    <p class="stack">Python · NumPy · Monte Carlo · GARCH</p>
+    <img src="images/energy-portfolio.png" alt="Volatility of oil and renewable energy markets, with resulting portfolio allocations">
+  </article>
+
+  <article class="project">
+    <h3>Coral bleaching — Potts model</h3>
+    <p>Markov chain simulation of temperature-induced reef degradation and recovery.
+    Parameters trained against observed bleaching at Scott Reef, Western Australia,
+    March 2010, with spatial correlation and phase transition analysis.</p>
+    <p class="stack">Python · scikit-learn · Potts model · Seaborn</p>
+    <img src="images/coral-bleaching.png" alt="Potts model simulation of a coral bleaching event">
+  </article>
+
+  <article class="project">
+    <h3>HMM-GARCH volatility regimes</h3>
+    <p>Detecting volatility and phase changes in high-frequency time series by
+    feeding GARCH values in as emission probabilities for a hidden Markov model,
+    with random matrix theory for signal processing. Validated against ten years of
+    oil market data by checking regime shifts coincide with known geopolitical shocks.</p>
+    <p class="stack">Python · GARCH · HMM · random matrix theory</p>
+    <img src="images/hmm-volatility.png" alt="Volatility state classification over an oil price time series with state transition probabilities">
+  </article>
+
+  <article class="project">
+    <h3>3D PDE solvers</h3>
+    <p>Numerical solutions to partial differential equations by successive
+    over-relaxation, visualised in three dimensions across varying boundary
+    conditions. Covers heat diffusion, wave propagation, Schrödinger and
+    Black-Scholes.</p>
+    <p class="stack">Python · C++ · SOR · finite difference</p>
+    <img src="images/pde-plots.png" alt="Three-dimensional surface plots of PDE solutions under different boundary conditions">
+  </article>
+
+  <footer>
+    <p>Source on <a href="https://github.com/KevinGrainger">GitHub</a>.</p>
+    <p>Set in <a href="https://github.com/IBM/plex">IBM Plex Mono</a>. Design
+    inspired by the <a href="https://panr.github.io/hugo-theme-terminal-demo/">Terminal
+    theme for Hugo</a> by panr.</p>
+  </footer>
+
+</main>
+</body>
+</html>
