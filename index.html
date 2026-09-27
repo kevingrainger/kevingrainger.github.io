@@ -161,59 +161,99 @@
   <h1>Kevin Grainger<span class="cursor" aria-hidden="true"></span></h1>
 
   <div class="intro">
-    <p>Quantitative analyst in London, working on climate physical risk. I build
-    statistical models from satellite and reanalysis data — Sentinel-2, MODIS,
-    ERA5 — to estimate how physical hazards translate into financial exposure.</p>
+    <p>Quantitative analyst in London, specialising in alternative data methods & physical risk modelling. I build
+    statistical models from satellite and reanalysis data, Sentinel-2, MODIS,
+    ERA5, to estimate various financial exposures.</p>
 
-    <p>Background in theoretical physics. Most of what I do sits somewhere between
-    numerical methods, stochastic processes and earth observation. Outside work I'm
-    reading toward mathematical ecology and complex systems.</p>
+    <p>Background in theoretical physics. Most of my work sits between
+    maths modelling and earth observation.</p>
   </div>
 
   <ul class="meta">
     <li><span class="key">cv</span><a href="cv.pdf">cv.pdf</a></li>
     <li><span class="key">github</span><a href="https://github.com/KevinGrainger">github.com/KevinGrainger</a></li>
-    <li><span class="key">email</span><a href="mailto:you@example.com">you@example.com</a></li>
+    <li><span class="key">email</span><a href="mailto:kevingrainger100@gmail.com">you@example.com</a></li>
   </ul>
 
-  <h2>Projects</h2>
+<h2>Projects</h2>
 
   <article class="project">
-    <h3>Energy portfolio optimisation</h3>
-    <p>Risk-based allocation across renewable and fossil fuel assets using modern
-    portfolio theory, with a GARCH-HMM volatility measure and Monte Carlo
-    simulation over a synthetic €10,000 book.</p>
-    <p class="stack">Python · NumPy · Monte Carlo · GARCH</p>
-    <img src="images/energy-portfolio.png" alt="Volatility of oil and renewable energy markets, with resulting portfolio allocations">
+    <h3>Coral reef tipping points — Potts model</h3>
+    <p>A lattice model of Scott Reef, Western Australia, calibrated to 23 years of
+    coral survey data and satellite heat stress (degree heating weeks from NOAA
+    sea-surface temperature). Tests whether the tipping points and hysteresis seen
+    in mean-field reef models survive when interactions are local, looking at cusp
+    surfaces, transition order and early warning signals.</p>
+    <p class="stack">Python · Potts model · Approximate Bayesian Computation · Google Earth Engine</p>
+    <img src="images/coral-cusp-surface.png" alt="3D cusp surface of equilibrium coral cover over heat stress and coupling strength">
   </article>
 
   <article class="project">
-    <h3>Coral bleaching — Potts model</h3>
-    <p>Markov chain simulation of temperature-induced reef degradation and recovery.
-    Parameters trained against observed bleaching at Scott Reef, Western Australia,
-    March 2010, with spatial correlation and phase transition analysis.</p>
-    <p class="stack">Python · scikit-learn · Potts model · Seaborn</p>
-    <img src="images/coral-bleaching.png" alt="Potts model simulation of a coral bleaching event">
+    <h3>Olive grove Xylella — stochastic SIR model</h3>
+    <p>A recreation of <a href="https://doi.org/10.1038/s41598-019-44997-4">A lattice
+    model to simulate the vector and the infection of the <em>Xylella fastidiosa</em>
+    on olive trees</a> by Annalisa Fierro, Antonella Liccardo and Francesco Porcelli
+    (<em>Scientific Reports</em>, 2019). Their model has spittlebugs moving across a
+    grove lattice and spreading <em>Xylella</em> between trees by stochastic SIR
+    transmission.</p>
+    <p>My extension examines the simulation as a percolation process, following
+    Grassberger (1983) and Newman (2002). Attempting to predict the final outbreak size
+    analytically. A separate front-speed argument predicts the timeline, including
+    the annual staircase pattern. Both are checked against the simulation.</p>
+    <p class="stack">Stochastic calculus · agent-based modelling · percolation theory · SIR</p>
+    <img src="images/olive-grove.gif" alt="Animated grove showing vectors moving and trees becoming infected over time">
   </article>
 
   <article class="project">
-    <h3>HMM-GARCH volatility regimes</h3>
-    <p>Detecting volatility and phase changes in high-frequency time series by
-    feeding GARCH values in as emission probabilities for a hidden Markov model,
-    with random matrix theory for signal processing. Validated against ten years of
-    oil market data by checking regime shifts coincide with known geopolitical shocks.</p>
-    <p class="stack">Python · GARCH · HMM · random matrix theory</p>
-    <img src="images/hmm-volatility.png" alt="Volatility state classification over an oil price time series with state transition probabilities">
+    <h3>corrlib — correlation toolbox</h3>
+    <p>A Python library for my personal projects: tail dependence
+    versus correlation, correlation at high sampling frequency, cleaning
+    noisy correlation matrices with random matrix theory, and minimum-variance
+    allocation. Also contains: <code>stack</code> module combining many noisy sensors into one
+    signal, using the same formula as minimum-variance.</p>
+    <p class="stack">Signal processing · NumPy · random matrix theory · yfinance</p>
+    <img src="images/corrlib-spectrum.png" alt="Eigenvalue spectrum of a market correlation matrix against the random-noise prediction">
   </article>
 
   <article class="project">
-    <h3>3D PDE solvers</h3>
-    <p>Numerical solutions to partial differential equations by successive
-    over-relaxation, visualised in three dimensions across varying boundary
-    conditions. Covers heat diffusion, wave propagation, Schrödinger and
-    Black-Scholes.</p>
-    <p class="stack">Python · C++ · SOR · finite difference</p>
-    <img src="images/pde-plots.png" alt="Three-dimensional surface plots of PDE solutions under different boundary conditions">
+    <h3>Seismic denoiser</h3>
+    <p>Earthquake detection in noisy seismometer records. Compares an various
+    detection algorithms against STA/LTA, the field's standard baseline, then adds
+    array stacking from simple averaging up to optimal weights. Scored on
+    signal-to-noise gain, pick-timing error and the smallest magnitude detected.</p>
+    <p class="stack">Seismology · signal processing · correaltion cleaning </p>
+    <img src="images/seismic-onset.gif" alt="Three-pane view of an earthquake onset with the detection pick firing">
+  </article>
+
+  <article class="project">
+    <h3>Light-weight Option pricer: European, American, Asian</h3>
+    <p>Black–Scholes with time-varying volatility σ(t), capturing seasonal and
+    near-expiry volatility patterns. European options validate the solver against
+    the exact formula and are then calibrated to SPX and SET50 (Bangkok) chains.
+    American options use projected SOR from my PDE solver project; Asian options use the Večeř
+    reduction, cross-checked by Monte Carlo.</p>
+    <p class="stack">PDE solvers · finite difference · projected SOR · Monte Carlo</p>
+    <img src="images/option-surfaces.png" alt="Three option price surfaces side by side, with the American early-exercise boundary marked">
+  </article>
+
+  <article class="project">
+    <h3>Italian power price volatility</h3>
+    <p>Replicates Guerzoni, Riso &amp; Zoia (2026) on how weather drives Italian
+    electricity price volatility, then replaces observed weather with bias-corrected
+    SEAS5 seasonal forecasts. Tests whether the forecast-driven model beats the
+    hindsight version. Aimed at use for energy hedging.</p>
+    <p class="stack">Energy modelling · GARCH-MIDAS · ERA5 · SEAS5</p>
+    <img src="images/italy-power-volatility.png" alt="Italian power price volatility against weather-driven model forecasts">
+  </article>
+
+  <article class="project">
+    <h3>Spatially correalted portfolio managment: Spanish solar portfolio </h3>
+    <p>How output from solar sites across Spain moves together, estimated from ERA5
+    and cleaned with corrlib, combined with ENTSO-E prices and capture rates. Builds
+    an allocation strategy with rebalancing rules and risk limits, and tests its
+    robustness across parameter choices.</p>
+    <p class="stack">Solar · ERA5 · ENTSO-E · corrlib</p>
+    <img src="images/solar-robustness.png" alt="3D robustness surface of strategy performance over two parameters">
   </article>
 
   <footer>
