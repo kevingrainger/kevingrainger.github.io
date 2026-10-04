@@ -151,7 +151,7 @@ def earlier_html(base, publish):
 
 # Credit lines rewritten to match what each project now actually does
 CREDITS = {
-    '001': '<p class="credit"><sup>&dagger;</sup>Builds on Mumby, Hastings &amp; Edwards (2007). Bleaching record from Scott Reef, Western Australia.</p>',
+    '001': '<p class="credit"><sup>&dagger;</sup>Builds on Mumby, Hastings &amp; Edwards (2007). Bleaching record from Scott Reef, Western Australia; sea temperatures from NOAA Coral Reef Watch and the Australian Institute of Marine Science (AIMS).</p>',
     '002': '<p class="credit"><sup>&dagger;</sup>Recreation of <a href="https://doi.org/10.1038/s41598-019-44997-4">Fierro, Liccardo &amp; Porcelli (2019)</a>, <em>Scientific Reports</em>.</p>',
     '003': '<p class="credit"><sup>&dagger;</sup>Builds on Epps (1979), Laloux, Cizeau, Bouchaud &amp; Potters (1999), Ledoit &amp; Wolf (2004, 2020) and Capon (1969). Prices from Yahoo Finance via yfinance.</p>',
     '004': '<p class="credit"><sup>&dagger;</sup>STA/LTA from Allen (1978); optimal array weights from Capon (1969). Labelled waveforms from <a href="https://doi.org/10.1029/2017JB015251">Ross, Meier &amp; Hauksson (2018)</a>, Southern California Seismic Network data via the <a href="https://doi.org/10.7909/C3WD3xH1">SCEDC</a>.</p>',
