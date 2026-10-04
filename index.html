@@ -1,268 +1,342 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kevin Grainger</title>
-<meta name="description" content="Quantitative analyst working on climate physical risk. Numerical modelling, stochastic processes, earth observation data.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg:      #12100e;
-    --fg:      #d7cec1;
-    --dim:     #7e7568;
-    --amber:   #e2a13c;
-    --rule:    #2b2721;
-    --measure: 74ch;
-  }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kevin Grainger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ground: #f7f6f2;
+      --text:   #1b1b1f;
+      --muted:  #6a6a70;
+      --accent: #2430bc;
+      --rule:   #dcdad3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--ground);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    }
+    a { color: var(--accent); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-  *, *::before, *::after { box-sizing: border-box; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 5rem 2rem; }
 
-  html { -webkit-text-size-adjust: 100%; }
+    /* Header */
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: -.02em;
+      margin: 0 0 1.5rem;
+    }
+    .intro { font-size: .9rem; line-height: 1.75; max-width: 40rem; margin: 0; color: var(--muted); }
+    .double-rule {
+      height: 4px;
+      margin: 3.5rem 0 2.5rem;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
 
-  body {
-    margin: 0;
-    padding: 4rem 1.5rem 6rem;
-    background: var(--bg);
-    color: var(--fg);
-    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 15px;
-    line-height: 1.7;
-    text-align: left;
-  }
+    /* Section heading and filter */
+    .section-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin: 0 0 1.25rem;
+      font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+    }
+    .section-head h2 { font: inherit; margin: 0; }
+    .filter { display: flex; flex-wrap: wrap; gap: .25rem .5rem; margin: 0 0 2rem -.55rem; }
+    .filter button {
+      min-height: 44px; padding: 0 .55rem;
+      border: 0; background: none; cursor: pointer;
+      font: inherit; font-size: .85rem; color: var(--muted);
+      transition: color .2s;
+    }
+    .filter button:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .filter button[aria-pressed="true"] {
+      color: var(--accent); text-decoration: underline; text-underline-offset: 4px;
+    }
 
-  main { max-width: var(--measure); margin: 0 auto; }
+    /* Project list */
+    .projects { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--rule); }
+    .project { border-top: 1px solid var(--rule); }
+    .project[hidden] { display: none; }
+    .project-head {
+      display: grid;
+      grid-template-columns: 3.5rem minmax(0, 1fr) 8.5rem 6.5rem;
+      gap: 1rem; align-items: baseline;
+      width: 100%; padding: .95rem 0;
+      border: 0; background: none; text-align: left; cursor: pointer;
+      font: inherit; color: var(--muted);
+      transition: color .2s;
+    }
+    .project:hover .project-head,
+    .project.open .project-head { color: var(--accent); }
+    .num { font-size: .8rem; }
+    .title { font-size: 1rem; }
+    .tag, .status { font-size: .72rem; text-align: right; letter-spacing: .06em; text-transform: uppercase; }
 
-  h1 {
-    font-size: 1.35rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    margin: 0;
-  }
+    /* Hover-to-expand: grid rows animate from 0fr to 1fr */
+    .more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.2, .8, .2, 1); }
+    .more > div { overflow: hidden; }
+    .project:hover .more,
+    .project:focus-within .more,
+    .project.open .more { grid-template-rows: 1fr; }
 
-  .cursor {
-    display: inline-block;
-    width: 0.55em;
-    height: 1.05em;
-    margin-left: 0.15em;
-    vertical-align: -0.16em;
-    background: var(--amber);
-    animation: blink 1.15s steps(1, end) infinite;
-  }
+    .detail { display: flex; flex-wrap: wrap; gap: 2rem; padding: 0 0 1.75rem 4.5rem; }
+    .text { flex: 1 1 20rem; min-width: 0; }
+    .text p { margin: 0 0 .7rem; font-size: .88rem; line-height: 1.65; }
+    .credit { font-style: italic; color: var(--accent); }
+    .credit sup { font-style: normal; margin-right: .35em; }
+    .stack { font-size: .76rem; color: var(--muted); }
+    .gh { font-size: .8rem; }
 
-  @keyframes blink { 50% { opacity: 0; } }
+    figure { flex: 0 0 300px; margin: 0; }
+    figure img { display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover; }
+    .no-figure {
+      display: flex; align-items: center; justify-content: center;
+      aspect-ratio: 2 / 1; border: 1px dashed var(--rule);
+      font-size: .72rem; color: var(--muted);
+    }
+    figcaption { margin-top: .4rem; font-size: .68rem; color: var(--muted); }
 
-  @media (prefers-reduced-motion: reduce) {
-    .cursor { animation: none; }
-  }
+    footer { margin-top: 4rem; font-size: .76rem; line-height: 1.8; color: var(--muted); }
+    footer p { margin: 0; }
+    footer a { color: inherit; }
 
-  .intro {
-    margin: 1.75rem 0 0;
-    max-width: 66ch;
-  }
-
-  .intro p { margin: 0 0 0.9rem; }
-
-  .meta {
-    margin: 2rem 0 0;
-    padding: 0;
-    list-style: none;
-    color: var(--dim);
-  }
-
-  .meta li { margin-bottom: 0.2rem; }
-
-  .meta .key {
-    display: inline-block;
-    min-width: 10ch;
-    color: var(--dim);
-  }
-
-  .meta a { color: var(--fg); }
-
-  /* ---- section headings ---- */
-  h2 {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--fg);
-    margin: 4.5rem 0 0;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  /* ---- projects ---- */
-  .project { margin-top: 3rem; }
-
-  .project h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--amber);
-    margin: 0 0 0.6rem;
-  }
-
-  .project p {
-    margin: 0 0 0.9rem;
-    max-width: 66ch;
-  }
-
-  .project img {
-    display: block;
-    width: 100%;
-    max-width: 620px;
-    height: auto;
-    margin: 1.25rem 0 0;
-    border: 1px solid var(--rule);
-    background: #0b0a09;
-  }
-
-  .stack {
-    margin: 0.6rem 0 0;
-    color: var(--dim);
-    font-size: 0.875rem;
-  }
-
-  /* ---- links ---- */
-  a {
-    color: var(--amber);
-    text-decoration: none;
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 1px;
-  }
-
-  a:hover { background: var(--amber); color: var(--bg); }
-
-  a:focus-visible {
-    outline: 2px solid var(--amber);
-    outline-offset: 2px;
-    background: none;
-    color: var(--amber);
-  }
-
-  footer {
-    margin-top: 5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--rule);
-    color: var(--dim);
-    font-size: 0.875rem;
-  }
-
-  @media (max-width: 40rem) {
-    body { padding: 2.5rem 1.15rem 4rem; font-size: 14px; }
-    h1 { font-size: 1.15rem; }
-    .meta .key { display: block; min-width: 0; }
-  }
-</style>
+    @media (max-width: 640px) {
+      .wrap { padding: 3rem 1.25rem 4rem; }
+      .project-head { grid-template-columns: 2.75rem minmax(0, 1fr) auto; }
+      .tag { display: none; }
+      .detail { padding-left: 0; }
+      figure { flex-basis: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .more, .project-head, .filter button { transition: none; }
+    }
+  </style>
 </head>
 <body>
-<main>
+<main class="wrap">
 
-  <h1>Kevin Grainger<span class="cursor" aria-hidden="true"></span></h1>
+  <header>
+    <h1>Kevin Grainger</h1>
+    <p class="intro">I'm a quantitative analyst in London working on climate physical
+    risk. The projects below sit across three themes: earth systems, signal processing,
+    and energy markets. Some grow out of expertise built in my current role, some are
+    passion projects, and some began as numerical and mathematical physics simulations
+    from my undergraduate degree in theoretical physics. Most start from someone else's
+    published model and try to add one honest result.</p>
+  </header>
 
-  <div class="intro">
-    <p>Quantitative analyst in London, specialising in alternative data methods & physical risk modelling. I build
-    statistical models from satellite and reanalysis data, Sentinel-2, MODIS,
-    ERA5, to estimate various financial exposures.</p>
+  <div class="double-rule"></div>
 
-    <p>Background in theoretical physics. Most of my work sits between
-    maths modelling and earth observation.</p>
+  <div class="section-head">
+    <h2>Projects</h2>
+    <span id="count">7 / 7</span>
   </div>
 
-  <ul class="meta">
-    <li><span class="key">cv</span><a href="cv.pdf">cv.pdf</a></li>
-    <li><span class="key">github</span><a href="https://github.com/KevinGrainger">github.com/KevinGrainger</a></li>
-    <li><span class="key">email</span><a href="mailto:kevingrainger100@gmail.com">you@example.com</a></li>
+  <div class="filter" role="group" aria-label="Filter projects">
+    <button type="button" data-filter="all" aria-pressed="true">all</button>
+    <button type="button" data-filter="earth" aria-pressed="false">earth</button>
+    <button type="button" data-filter="signals" aria-pressed="false">signals</button>
+    <button type="button" data-filter="markets" aria-pressed="false">markets</button>
+  </div>
+
+  <ul class="projects">
+
+    <li class="project" data-tag="earth">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">001</span><span class="title">Coral reef tipping points</span>
+        <span class="tag">Earth systems</span><span class="status">complete</span>
+      </button>
+      <div class="more"><div><div class="detail">
+        <div class="text">
+          <p>A Potts lattice model of Scott Reef, Western Australia, calibrated to 23 years
+          of coral survey data and satellite heat stress. Tests whether the tipping points
+          seen in mean-field reef models survive when interactions are local.</p>
+          <p class="credit"><sup>†</sup>Builds on Mumby, Hastings &amp; Edwards (2007). Survey
+          data from Gilmour, Cook &amp; Ryan (2021).</p>
+          <p class="stack">Python · Potts model · Approximate Bayesian Computation · Earth Engine</p>
+          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+        </div>
+        <figure>
+          <img src="images/coral-bleaching.png" alt="Potts model simulation of a coral bleaching event" loading="lazy">
+          <figcaption>Original Potts bleaching run</figcaption>
+        </figure>
+      </div></div></div>
+    </li>
+
+    <li class="project" data-tag="earth">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">002</span><span class="title">Olive grove Xylella, stochastic SIR</span>
+        <span class="tag">Earth systems</span><span class="status">complete</span>
+      </button>
+      <div class="more"><div><div class="detail">
+        <div class="text">
+          <p>An agent-based model of spittlebugs spreading <em>Xylella</em> through an olive
+          grove, extended with a percolation prediction of final outbreak size and a
+          front-speed prediction of its timeline.</p>
+          <p class="credit"><sup>†</sup>Recreation of <a href="https://doi.org/10.1038/s41598-019-44997-4">Fierro,
+          Liccardo &amp; Porcelli (2019)</a>, <em>Scientific Reports</em>. Percolation mapping from
+          Grassberger (1983) and Newman (2002).</p>
+          <p class="stack">Python · agent-based modelling · percolation theory</p>
+          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+        </div>
+        <figure>
+          <img src="images/olive-grove.png" alt="Olive grove simulation showing infected trees and the SIR curve" loading="lazy">
+          <figcaption>Original grove simulation</figcaption>
+        </figure>
+      </div></div></div>
+    </li>
+
+    <li class="project" data-tag="signals">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">003</span><span class="title">corrlib, a correlation toolbox</span>
+        <span class="tag">Signals</span><span class="status">complete</span>
+      </button>
+      <div class="more"><div><div class="detail">
+        <div class="text">
+          <p>A Python library for when correlation numbers mislead: tail dependence, the
+          fade in correlation at high sampling frequency, cleaning noisy matrices with
+          random matrix theory, and stacking many sensors into one signal.</p>
+          <p class="credit"><sup>†</sup>Builds on Epps (1979) and Laloux, Cizeau, Bouchaud
+          &amp; Potters (1999).</p>
+          <p class="stack">Python · NumPy · random matrix theory</p>
+          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+        </div>
+        <figure>
+          <div class="no-figure">[figure to come]</div>
+        </figure>
+      </div></div></div>
+    </li>
+
+    <li class="project" data-tag="signals">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">004</span><span class="title">Seismic denoiser</span>
+        <span class="tag">Signals</span><span class="status">in progress</span>
+      </button>
+      <div class="more"><div><div class="detail">
+        <div class="text">
+          <p>Earthquake detection in noisy seismometer records. An imported detector is
+          compared against the STA/LTA baseline, then array stacking is added, from
+          simple averaging up to optimal weights.</p>
+          <p class="credit"><sup>†</sup>Detector by [ORIGINAL AUTHORS]. Waveforms from the
+          Southern California Earthquake Data Center.</p>
+          <p class="stack">Python · signal processing · beamforming · corrlib</p>
+          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+        </div>
+        <figure>
+          <img src="images/seismic-denoised.png" alt="Seismic waveform before and after denoising" loading="lazy">
+          <figcaption>Denoised waveform</figcaption>
+        </figure>
+      </div></div></div>
+    </li>
+
+    <li class="project" data-tag="markets">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">005</span><span class="title">Option pricer: European, American, Asian</span>
+        <span class="tag">Markets</span><span class="status">in progress</span>
+      </button>
+      <div class="more"><div><div class="detail">
+        <div class="text">
+          <p>Black–Scholes with time-varying volatility, calibrated to SPX and SET50 option
+          chains. American options by projected SOR; Asian options by the Večeř reduction,
+          checked by Monte Carlo.</p>
+          <p class="credit"><sup>†</sup>Asian pricing method from Večeř (2001).</p>
+          <p class="stack">Python · finite difference · projected SOR · Monte Carlo</p>
+          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+        </div>
+        <figure>
+          <img src="images/pde-plots.png" alt="Three-dimensional surface plots of PDE solutions" loading="lazy">
+          <figcaption>Older figure: 3D SOR solutions, placeholder</figcaption>
+        </figure>
+      </div></div></div>
+    </li>
+
+    <li class="project" data-tag="markets">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">006</span><span class="title">Italian power price volatility</span>
+        <span class="tag">Markets</span><span class="status">in progress</span>
+      </button>
+      <div class="more"><div><div class="detail">
+        <div class="text">
+          <p>How weather drives Italian electricity price volatility, then whether seasonal
+          weather forecasts can predict it ahead of time.</p>
+          <p class="credit"><sup>†</sup>Replication of Guerzoni, Riso &amp; Zoia (2026), extended
+          with SEAS5 forecasts.</p>
+          <p class="stack">Python · GARCH-MIDAS · ERA5 · SEAS5</p>
+          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+        </div>
+        <figure>
+          <img src="images/hmm-volatility.png" alt="Volatility state classification over an oil price time series" loading="lazy">
+          <figcaption>Older figure: HMM volatility, placeholder</figcaption>
+        </figure>
+      </div></div></div>
+    </li>
+
+    <li class="project" data-tag="markets">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">007</span><span class="title">Spanish solar portfolio strategy</span>
+        <span class="tag">Markets</span><span class="status">in progress</span>
+      </button>
+      <div class="more"><div><div class="detail">
+        <div class="text">
+          <p>How output from solar sites across Spain moves together, combined with market
+          prices to build an allocation strategy with rebalancing rules and risk limits,
+          tested across parameter choices.</p>
+          <p class="credit"><sup>†</sup>Weather from ERA5 (Copernicus); prices from ENTSO-E.</p>
+          <p class="stack">Python · ERA5 · ENTSO-E · corrlib</p>
+          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+        </div>
+        <figure>
+          <img src="images/energy-portfolio.png" alt="Volatility of oil and renewable markets with resulting portfolio allocations" loading="lazy">
+          <figcaption>Older figure: energy portfolio, placeholder</figcaption>
+        </figure>
+      </div></div></div>
+    </li>
+
   </ul>
-
-<h2>Projects</h2>
-
-  <article class="project">
-    <h3>Coral reef tipping points — Potts model</h3>
-    <p>A lattice model of Scott Reef, Western Australia, calibrated to 23 years of
-    coral survey data and satellite heat stress (degree heating weeks from NOAA
-    sea-surface temperature). Tests whether the tipping points and hysteresis seen
-    in mean-field reef models survive when interactions are local, looking at cusp
-    surfaces, transition order and early warning signals.</p>
-    <p class="stack">Python · Potts model · Approximate Bayesian Computation · Google Earth Engine</p>
-    <img src="images/coral-cusp-surface.png" alt="3D cusp surface of equilibrium coral cover over heat stress and coupling strength">
-  </article>
-
-  <article class="project">
-    <h3>Olive grove Xylella — stochastic SIR model</h3>
-    <p>A recreation of <a href="https://doi.org/10.1038/s41598-019-44997-4">A lattice
-    model to simulate the vector and the infection of the <em>Xylella fastidiosa</em>
-    on olive trees</a> by Annalisa Fierro, Antonella Liccardo and Francesco Porcelli
-    (<em>Scientific Reports</em>, 2019). Their model has spittlebugs moving across a
-    grove lattice and spreading <em>Xylella</em> between trees by stochastic SIR
-    transmission.</p>
-    <p>My extension examines the simulation as a percolation process, following
-    Grassberger (1983) and Newman (2002). Attempting to predict the final outbreak size
-    analytically. A separate front-speed argument predicts the timeline, including
-    the annual staircase pattern. Both are checked against the simulation.</p>
-    <p class="stack">Stochastic calculus · agent-based modelling · percolation theory · SIR</p>
-    <img src="images/olive-grove.gif" alt="Animated grove showing vectors moving and trees becoming infected over time">
-  </article>
-
-  <article class="project">
-    <h3>corrlib — correlation toolbox</h3>
-    <p>A Python library for my personal projects: tail dependence
-    versus correlation, correlation at high sampling frequency, cleaning
-    noisy correlation matrices with random matrix theory, and minimum-variance
-    allocation. Also contains: <code>stack</code> module combining many noisy sensors into one
-    signal, using the same formula as minimum-variance.</p>
-    <p class="stack">Signal processing · NumPy · random matrix theory · yfinance</p>
-    <img src="images/corrlib-spectrum.png" alt="Eigenvalue spectrum of a market correlation matrix against the random-noise prediction">
-  </article>
-
-  <article class="project">
-    <h3>Seismic denoiser</h3>
-    <p>Earthquake detection in noisy seismometer records. Compares an various
-    detection algorithms against STA/LTA, the field's standard baseline, then adds
-    array stacking from simple averaging up to optimal weights. Scored on
-    signal-to-noise gain, pick-timing error and the smallest magnitude detected.</p>
-    <p class="stack">Seismology · signal processing · correaltion cleaning </p>
-    <img src="images/seismic-onset.gif" alt="Three-pane view of an earthquake onset with the detection pick firing">
-  </article>
-
-  <article class="project">
-    <h3>Light-weight Option pricer: European, American, Asian</h3>
-    <p>Black–Scholes with time-varying volatility σ(t), capturing seasonal and
-    near-expiry volatility patterns. European options validate the solver against
-    the exact formula and are then calibrated to SPX and SET50 (Bangkok) chains.
-    American options use projected SOR from my PDE solver project; Asian options use the Večeř
-    reduction, cross-checked by Monte Carlo.</p>
-    <p class="stack">PDE solvers · finite difference · projected SOR · Monte Carlo</p>
-    <img src="images/option-surfaces.png" alt="Three option price surfaces side by side, with the American early-exercise boundary marked">
-  </article>
-
-  <article class="project">
-    <h3>Italian power price volatility</h3>
-    <p>Replicates Guerzoni, Riso &amp; Zoia (2026) on how weather drives Italian
-    electricity price volatility, then replaces observed weather with bias-corrected
-    SEAS5 seasonal forecasts. Tests whether the forecast-driven model beats the
-    hindsight version. Aimed at use for energy hedging.</p>
-    <p class="stack">Energy modelling · GARCH-MIDAS · ERA5 · SEAS5</p>
-    <img src="images/italy-power-volatility.png" alt="Italian power price volatility against weather-driven model forecasts">
-  </article>
-
-  <article class="project">
-    <h3>Spatially correalted portfolio managment: Spanish solar portfolio </h3>
-    <p>How output from solar sites across Spain moves together, estimated from ERA5
-    and cleaned with corrlib, combined with ENTSO-E prices and capture rates. Builds
-    an allocation strategy with rebalancing rules and risk limits, and tests its
-    robustness across parameter choices.</p>
-    <p class="stack">Solar · ERA5 · ENTSO-E · corrlib</p>
-    <img src="images/solar-robustness.png" alt="3D robustness surface of strategy performance over two parameters">
-  </article>
 
   <footer>
     <p>Source on <a href="https://github.com/KevinGrainger">GitHub</a>.</p>
-    <p>Set in <a href="https://github.com/IBM/plex">IBM Plex Mono</a>. Design
-    inspired by the <a href="https://panr.github.io/hugo-theme-terminal-demo/">Terminal
-    theme for Hugo</a> by panr.</p>
+    <p>Set in <a href="https://github.com/IBM/plex">IBM Plex Mono</a>. Design inspired by the
+    <a href="https://panr.github.io/hugo-theme-terminal-demo/">Terminal theme for Hugo</a> by panr.</p>
   </footer>
 
 </main>
+
+<script>
+  // Filter: show only projects whose data-tag matches the pressed button.
+  const buttons = document.querySelectorAll('.filter button');
+  const projects = document.querySelectorAll('.project');
+  const count = document.getElementById('count');
+
+  buttons.forEach(btn => btn.addEventListener('click', () => {
+    const f = btn.dataset.filter;
+    buttons.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+    let shown = 0;
+    projects.forEach(p => {
+      const match = f === 'all' || p.dataset.tag === f;
+      p.hidden = !match;
+      if (match) shown++;
+    });
+    count.textContent = shown + ' / ' + projects.length;
+  }));
+
+  // Click a row to pin it open (hover already previews it).
+  projects.forEach(p => {
+    const head = p.querySelector('.project-head');
+    head.addEventListener('click', () => {
+      const open = p.classList.toggle('open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+</script>
 </body>
 </html>
