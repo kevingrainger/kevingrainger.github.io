@@ -85,8 +85,10 @@
     .more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.2, .8, .2, 1); }
     .more > div { overflow: hidden; }
     .project:hover .more,
-    .project:focus-within .more,
     .project.open .more { grid-template-rows: 1fr; }
+    /* Keyboard users: keep the row open while focus is inside it.
+       :focus-visible ignores mouse clicks, so a clicked button doesn't pin the row. */
+    .project:has(:focus-visible) .more { grid-template-rows: 1fr; }
 
     .detail { display: flex; flex-wrap: wrap; gap: 2rem; padding: 0 0 1.75rem 4.5rem; }
     .text { flex: 1 1 20rem; min-width: 0; }
@@ -105,6 +107,60 @@
     }
     figcaption { margin-top: .4rem; font-size: .68rem; color: var(--muted); }
 
+
+    /* View more: pinned-open write-up with tabs */
+    .project.more-open .more { grid-template-rows: 1fr; }
+    .view-more {
+      margin-top: .9rem; min-height: 44px; padding: 0;
+      border: 0; background: none; cursor: pointer;
+      font: inherit; font-size: .8rem; color: var(--accent);
+      text-decoration: underline; text-underline-offset: 4px;
+    }
+    .ext { padding: 0 0 2.5rem 4.5rem; }
+    .tabs { display: flex; flex-wrap: wrap; gap: .25rem .5rem; margin: 0 0 1.75rem -.55rem; }
+    .tabs button {
+      min-height: 44px; padding: 0 .55rem;
+      border: 0; background: none; cursor: pointer;
+      font: inherit; font-size: .82rem; color: var(--muted);
+    }
+    .tabs button:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .tabs button[aria-selected="true"] { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+
+    .timeline { list-style: none; margin: 0 0 0 .5rem; padding: 0; border-left: 1px solid var(--rule); }
+    .step { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 2rem; padding: 0 0 2rem 1.75rem; }
+    .step::before {
+      content: ""; position: absolute; left: -.45rem; top: .2rem;
+      width: .9rem; height: .9rem; border-radius: 50%;
+      background: var(--ground); border: 1px solid var(--accent);
+    }
+    .step h5 { margin: 0 0 .4rem; font-size: .92rem; font-weight: 500; color: var(--accent); }
+    .step p { margin: 0; font-size: .84rem; line-height: 1.65; }
+    .sn { margin-right: .5rem; font-size: .72rem; color: var(--muted); }
+    .step figure { flex: none; }
+
+    .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; }
+    .results figure { flex: none; }
+    .note { font-size: .78rem; color: var(--muted); margin: 1.25rem 0 0; }
+
+    .pipe { overflow-x: auto; border: 1px solid var(--rule); background: #fff; padding: .75rem; }
+    .pipe svg { display: block; min-width: 720px; font-family: inherit; }
+    .hint { font-size: .74rem; color: var(--muted); margin: 0 0 .75rem; }
+    .flow-head { margin: 1.75rem 0 .75rem; font-size: .72rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+    .flow-note { font-size: .78rem; color: var(--muted); font-style: italic; margin: 0 0 .75rem; }
+    .flow { margin: 0; padding-left: 1.4rem; max-width: 46rem; }
+    .flow li { font-size: .84rem; line-height: 1.65; margin-bottom: .6rem; }
+    .flow b { font-weight: 500; }
+    .flow code { font-family: inherit; font-size: .8rem; background: #ecebe5; padding: 0 .25em; }
+
+    /* Pipeline trace: hover a box, the rest dims and its path animates */
+    .map .node { cursor: pointer; outline: none; }
+    .map .node, .map .edge { transition: opacity .25s ease; }
+    .map.tracing .node:not(.on) { opacity: .2; }
+    .map.tracing .edge:not(.on) { opacity: .12; }
+    .map .node.focus rect { stroke: #2430bc; stroke-width: 2; }
+    .map .edge.on { stroke: #2430bc; stroke-width: 1.8; stroke-dasharray: 6 4; animation: flow .7s linear infinite; }
+    @keyframes flow { to { stroke-dashoffset: -10; } }
+
     footer { margin-top: 4rem; font-size: .76rem; line-height: 1.8; color: var(--muted); }
     footer p { margin: 0; }
     footer a { color: inherit; }
@@ -115,9 +171,12 @@
       .tag { display: none; }
       .detail { padding-left: 0; }
       figure { flex-basis: 100%; }
+      .ext { padding-left: 0; }
+      .step { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) {
       .more, .project-head, .filter button { transition: none; }
+      .map .edge.on { animation: none; stroke-dasharray: none; }
     }
   </style>
 </head>
@@ -149,156 +208,308 @@
   </div>
 
   <ul class="projects">
-
     <li class="project" data-tag="earth">
       <button class="project-head" type="button" aria-expanded="false">
         <span class="num">001</span><span class="title">Coral reef tipping points</span>
         <span class="tag">Earth systems</span><span class="status">complete</span>
       </button>
-      <div class="more"><div><div class="detail">
-        <div class="text">
-          <p>A Potts lattice model of Scott Reef, Western Australia, calibrated to 23 years
-          of coral survey data and satellite heat stress. Tests whether the tipping points
-          seen in mean-field reef models survive when interactions are local.</p>
-          <p class="credit"><sup>†</sup>Builds on Mumby, Hastings &amp; Edwards (2007). Survey
-          data from Gilmour, Cook &amp; Ryan (2021).</p>
-          <p class="stack">Python · Potts model · Approximate Bayesian Computation · Earth Engine</p>
-          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Aim: test whether coral reefs have tipping points, a level of heat past which they collapse and do not come back. A Potts lattice model, the statistical-physics model of magnetism adapted to reef states, is run by Markov chain Monte Carlo and calibrated to 23 years of Scott Reef surveys and satellite heat stress with Approximate Bayesian Computation. It then measures hysteresis, cusp surfaces and early warning signals as the range of interaction between reef patches changes.</p>
+            <p class="credit"><sup>†</sup>Builds on Mumby, Hastings &amp; Edwards (2007). Survey data from Gilmour, Cook &amp; Ryan (2021).</p>
+            <p class="stack">Python · Potts model · Approximate Bayesian Computation · Earth Engine</p>
+            <a class="gh" href="https://github.com/kevingrainger/KevinGrainger_Rep/tree/main/Coral%20Phase%20Changes">View on GitHub</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-001">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Coral%20Bleahcing%20Sim%20-%20Potts%20model.png" alt="Potts model simulation of a coral bleaching event" loading="lazy"><figcaption>Original Potts bleaching run</figcaption></figure>
         </div>
-        <figure>
-          <img src="images/coral-bleaching.png" alt="Potts model simulation of a coral bleaching event" loading="lazy">
-          <figcaption>Original Potts bleaching run</figcaption>
-        </figure>
-      </div></div></div>
+        <div class="ext" id="ext-001" hidden>
+          <div class="tabs" role="tablist" aria-label="Coral reef tipping points sections">
+            <button type="button" role="tab" id="t-001-method" aria-controls="p-001-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-001-results" aria-controls="p-001-results" aria-selected="false" tabindex="-1">results</button>
+            <button type="button" role="tab" id="t-001-pipeline" aria-controls="p-001-pipeline" aria-selected="false" tabindex="-1">pipeline</button>
+          </div>
+          <div class="panel" role="tabpanel" id="p-001-method" aria-labelledby="t-001-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Calibrate to the reef</h5><p>Fit the lattice to 23 years of Scott Reef coral cover and satellite heat stress using Approximate Bayesian Computation: try many parameter sets and keep those whose simulated reef looks like the real one.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Coral%20Bleahcing%20Sim%20-%20Potts%20model.png" alt="Potts model simulation of a coral bleaching event" loading="lazy"><figcaption>Original Potts bleaching run</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Switch the interaction range</h5><p>Each site feels only its z nearest neighbours, with z = 0, 4, 8, 12 or every site. Coupling is divided by z, so total coupling stays fixed while the range changes.</p></div><figure><div class="no-figure">[ Lattice snapshots at z = 4 and z = N ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Ramp the heat up, then down</h5><p>Raise heat stress until the reef collapses, then lower it again. If recovery needs much cooler water than collapse did, the gap is the hysteresis width W(z).</p></div><figure><div class="no-figure">[ Hysteresis loops, one per z ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Sweep heat and coupling</h5><p>Map equilibrium cover over a grid of heat stress and coupling to draw the cusp surface, and test whether early warning signals rise before each transition.</p></div><figure><div class="no-figure">[ 3D cusp surface ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">05</span>Change the ramp rate</h5><p>Warm the reef to a level it could survive if warmed slowly, at increasing speeds, to find the critical rate and check whether the warnings still fire.</p></div><figure><div class="no-figure">[ Tip or survive against ramp rate ]</div><figcaption>planned figure</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-001-results" aria-labelledby="t-001-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Coral%20Bleahcing%20Sim%20-%20Potts%20model.png" alt="Potts model simulation of a coral bleaching event" loading="lazy"><figcaption>Original Potts bleaching run</figcaption></figure><figure><div class="no-figure">[ Hysteresis width against range, compared with mean field ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Warning lead times by transition order ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Warnings at rate-induced tipping ]</div><figcaption>planned figure</figcaption></figure></div>
+            <p class="note">Results are added here as each run is finished.</p>
+          </div>
+          <div class="panel" role="tabpanel" id="p-001-pipeline" aria-labelledby="t-001-pipeline" hidden>
+            <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
+            <div class="pipe"><svg class="map" viewBox="0 0 1000 306" width="100%" role="img" aria-label="Coral Reef Tipping Points: Model and Experiment Pipeline" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah001" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2430bc"/></marker><marker id="am001" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6a6a70"/></marker></defs><text x="12" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">INPUTS</text><text x="212" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">MODEL</text><text x="412" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">SWEEPS</text><text x="612" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">INDICATORS</text><text x="812" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">FINDINGS</text><path class="edge" data-from="survey" data-to="abc" d="M170 81.0L190.0 81.0L190.0 81.0L210 81.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am001)"/><path class="edge" data-from="dhw" data-to="potts" d="M170 173.0L190.0 173.0L190.0 173.0L210 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="mumby" data-to="range" d="M170 265.0L190.0 265.0L190.0 265.0L210 265.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am001)"/><path class="edge" data-from="abc" data-to="potts" d="M291.0 106L291.0 146" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am001)"/><path class="edge" data-from="range" data-to="potts" d="M291.0 240L291.0 200" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am001)"/><path class="edge" data-from="potts" data-to="cusp" d="M370 173.0L390.0 173.0L390.0 173.0L410 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="potts" data-to="hyst" d="M370 173.0L390.0 173.0L390.0 81.0L410 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="potts" data-to="rate" d="M370 173.0L390.0 173.0L390.0 265.0L410 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="hyst" data-to="width" d="M570 81.0L590.0 81.0L590.0 81.0L610 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="cusp" data-to="ews" d="M570 173.0L590.0 173.0L590.0 173.0L610 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="rate" data-to="crit" d="M570 265.0L590.0 265.0L590.0 265.0L610 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="width" data-to="f1" d="M770 81.0L790.0 81.0L790.0 81.0L810 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="ews" data-to="f2" d="M770 173.0L790.0 173.0L790.0 173.0L810 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><path class="edge" data-from="crit" data-to="f3" d="M770 265.0L790.0 265.0L790.0 265.0L810 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah001)"/><g class="node" data-id="survey" tabindex="0" role="button" aria-label="Coral surveys: Scott Reef, 23 years. Highlight its path"><rect x="12" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="77" font-size="12.5" fill="#1b1b1f">Coral surveys</text><text x="22" y="94" font-size="10.5" fill="#6a6a70">Scott Reef, 23 years</text></g><g class="node" data-id="dhw" tabindex="0" role="button" aria-label="Heat stress: satellite DHW. Highlight its path"><rect x="12" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="169" font-size="12.5" fill="#1b1b1f">Heat stress</text><text x="22" y="186" font-size="10.5" fill="#6a6a70">satellite DHW</text></g><g class="node" data-id="mumby" tabindex="0" role="button" aria-label="Mean-field model: Mumby et al. 2007. Highlight its path"><rect x="12" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="261" font-size="12.5" fill="#1b1b1f">Mean-field model</text><text x="22" y="278" font-size="10.5" fill="#6a6a70">Mumby et al. 2007</text></g><g class="node" data-id="abc" tabindex="0" role="button" aria-label="ABC calibration: nudge switched off. Highlight its path"><rect x="212" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="77" font-size="12.5" fill="#1b1b1f">ABC calibration</text><text x="222" y="94" font-size="10.5" fill="#6a6a70">nudge switched off</text></g><g class="node" data-id="potts" tabindex="0" role="button" aria-label="Potts lattice: Metropolis, J / z. Highlight its path"><rect x="212" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="169" font-size="12.5" fill="#1b1b1f">Potts lattice</text><text x="222" y="186" font-size="10.5" fill="#6a6a70">Metropolis, J / z</text></g><g class="node" data-id="range" tabindex="0" role="button" aria-label="Range switch: z = 0, 4, 8, 12, N. Highlight its path"><rect x="212" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="261" font-size="12.5" fill="#1b1b1f">Range switch</text><text x="222" y="278" font-size="10.5" fill="#6a6a70">z = 0, 4, 8, 12, N</text></g><g class="node" data-id="hyst" tabindex="0" role="button" aria-label="Hysteresis ramp: dT up, then down. Highlight its path"><rect x="412" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="77" font-size="12.5" fill="#1b1b1f">Hysteresis ramp</text><text x="422" y="94" font-size="10.5" fill="#6a6a70">dT up, then down</text></g><g class="node" data-id="cusp" tabindex="0" role="button" aria-label="Cusp sweep: dT x g, order tests. Highlight its path"><rect x="412" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="169" font-size="12.5" fill="#1b1b1f">Cusp sweep</text><text x="422" y="186" font-size="10.5" fill="#6a6a70">dT x g, order tests</text></g><g class="node" data-id="rate" tabindex="0" role="button" aria-label="Ramp-rate test: sub-threshold end. Highlight its path"><rect x="412" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="261" font-size="12.5" fill="#1b1b1f">Ramp-rate test</text><text x="422" y="278" font-size="10.5" fill="#6a6a70">sub-threshold end</text></g><g class="node" data-id="width" tabindex="0" role="button" aria-label="Width W(z): collapse vs recovery. Highlight its path"><rect x="612" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="77" font-size="12.5" fill="#1b1b1f">Width W(z)</text><text x="622" y="94" font-size="10.5" fill="#6a6a70">collapse vs recovery</text></g><g class="node" data-id="ews" tabindex="0" role="button" aria-label="Early warnings: temporal, spatial. Highlight its path"><rect x="612" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="169" font-size="12.5" fill="#1b1b1f">Early warnings</text><text x="622" y="186" font-size="10.5" fill="#6a6a70">temporal, spatial</text></g><g class="node" data-id="crit" tabindex="0" role="button" aria-label="Critical rate: r_c across seeds. Highlight its path"><rect x="612" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="261" font-size="12.5" fill="#1b1b1f">Critical rate</text><text x="622" y="278" font-size="10.5" fill="#6a6a70">r_c across seeds</text></g><g class="node" data-id="f1" tabindex="0" role="button" aria-label="Range effect: vs mean field. Highlight its path"><rect x="812" y="56" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="77" font-size="12.5" fill="#2430bc">Range effect</text><text x="822" y="94" font-size="10.5" fill="#6a6a70">vs mean field</text></g><g class="node" data-id="f2" tabindex="0" role="button" aria-label="Lead times: by transition order. Highlight its path"><rect x="812" y="148" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="169" font-size="12.5" fill="#2430bc">Lead times</text><text x="822" y="186" font-size="10.5" fill="#6a6a70">by transition order</text></g><g class="node" data-id="f3" tabindex="0" role="button" aria-label="Blind-spot test: warnings at R-tip. Highlight its path"><rect x="812" y="240" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="261" font-size="12.5" fill="#2430bc">Blind-spot test</text><text x="822" y="278" font-size="10.5" fill="#6a6a70">warnings at R-tip</text></g></svg></div>
+            <h5 class="flow-head">How the data flows</h5>
+            <ol class="flow"><li><b>Input.</b> A daily heat-stress series and the Scott Reef coral-cover survey, each a 1D array indexed by date. The current repo version reads daily temperature and observed bleached fraction from <code>Coral temps.xlsx</code> (columns <code>temp</code> and <code>smooth</code>) with pandas.</li><li><b>State.</b> The reef is a 2D integer NumPy array (100 × 100), one cell per patch, each holding a state code: healthy, bleached, bare rock or ocean. A float array of the same shape holds each cell&#39;s accumulated heat stress.</li><li><b>Update.</b> Each simulated day, the Metropolis step proposes a new state for each cell, computes the energy change from its neighbours (coupling J divided by the range z) and the local heat stress, and accepts the change with probability exp(−β ΔE).</li><li><b>Record.</b> After each day, the count of cells in each state is appended to a dict of lists (<code>healthy</code>, <code>bleached</code>, ...), giving one time series per state.</li><li><b>Calibrate.</b> ABC draws many parameter sets, runs the model for each, compares its cover series with the survey, and keeps the closest sets.</li><li><b>Output (planned).</b> The calibrated model is rerun across the sweeps (range z, heat ramps, a heat × coupling grid, ramp rates). Each run is reduced to a few numbers, such as hysteresis width, warning onset, tipped or survived, stored as one row per run in a table that the figures are drawn from.</li></ol>
+          </div>
+        </div>
+      </div></div>
     </li>
-
     <li class="project" data-tag="earth">
       <button class="project-head" type="button" aria-expanded="false">
         <span class="num">002</span><span class="title">Olive grove Xylella, stochastic SIR</span>
         <span class="tag">Earth systems</span><span class="status">complete</span>
       </button>
-      <div class="more"><div><div class="detail">
-        <div class="text">
-          <p>An agent-based model of spittlebugs spreading <em>Xylella</em> through an olive
-          grove, extended with a percolation prediction of final outbreak size and a
-          front-speed prediction of its timeline.</p>
-          <p class="credit"><sup>†</sup>Recreation of <a href="https://doi.org/10.1038/s41598-019-44997-4">Fierro,
-          Liccardo &amp; Porcelli (2019)</a>, <em>Scientific Reports</em>. Percolation mapping from
-          Grassberger (1983) and Newman (2002).</p>
-          <p class="stack">Python · agent-based modelling · percolation theory</p>
-          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Aim: predict how far and how fast <em>Xylella</em> spreads through an olive grove, and how far apart trees must be planted to stop it. A stochastic agent-based SIR simulation recreates the published model, with spittlebugs as the disease vector and seasonal infection patterns. The extension maps the simulation onto bond percolation, so the final outbreak size and the critical planting distance follow analytically, with a front-speed argument for the timeline.</p>
+            <p class="credit"><sup>†</sup>Recreation of <a href="https://doi.org/10.1038/s41598-019-44997-4">Fierro, Liccardo &amp; Porcelli (2019)</a>, <em>Scientific Reports</em>. Percolation mapping from Grassberger (1983) and Newman (2002).</p>
+            <p class="stack">Python · agent-based modelling · percolation theory</p>
+            <a class="gh" href="https://github.com/kevingrainger/KevinGrainger_Rep/tree/main/Olive%20%20Grove%20SIR">View on GitHub</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-002">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Olive%20%20Grove%20SIR/OliveGrove_results.png" alt="Olive grove simulation showing infected trees and the SIR curve" loading="lazy"><figcaption>Original grove simulation</figcaption></figure>
         </div>
-        <figure>
-          <img src="images/olive-grove.png" alt="Olive grove simulation showing infected trees and the SIR curve" loading="lazy">
-          <figcaption>Original grove simulation</figcaption>
-        </figure>
-      </div></div></div>
+        <div class="ext" id="ext-002" hidden>
+          <div class="tabs" role="tablist" aria-label="Olive grove Xylella, stochastic SIR sections">
+            <button type="button" role="tab" id="t-002-method" aria-controls="p-002-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-002-results" aria-controls="p-002-results" aria-selected="false" tabindex="-1">results</button>
+            <button type="button" role="tab" id="t-002-pipeline" aria-controls="p-002-pipeline" aria-selected="false" tabindex="-1">pipeline</button>
+          </div>
+          <div class="panel" role="tabpanel" id="p-002-method" aria-labelledby="t-002-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Rebuild the source model</h5><p>Re-run the Fierro, Liccardo and Porcelli grove: 256 trees and spittlebugs moving between them over three years. The logic is unchanged; a log now records which tree infected which, and on which day.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Olive%20%20Grove%20SIR/OliveGrove_results.png" alt="Olive grove simulation showing infected trees and the SIR curve" loading="lazy"><figcaption>Original grove simulation</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Measure how infection travels</h5><p>From one logged run, measure the transmissibility T(d): the chance an infected tree passes the disease to a tree at distance d. Also measure how fast the infection front moves.</p></div><figure><div class="no-figure">[ T(d) against distance ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Predict outbreak size without simulating</h5><p>A stochastic SIR epidemic ends in the same pattern as bond percolation: link each pair of trees with probability T(d), and the outbreak is the cluster containing the first tree. This gives the final size and the critical planting distance directly.</p></div><figure><div class="no-figure">[ Predicted outbreak size against planting distance ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Predict the timeline</h5><p>Percolation has no clock. A front moving at constant speed gives quadratic growth in infected trees, and the yearly reset of the vector population turns that curve into a staircase.</p></div><figure><div class="no-figure">[ Theory curve over simulated infections ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">05</span>Check one prediction</h5><p>Run a full simulation at the predicted critical spacing to confirm it.</p></div><figure><div class="no-figure">[ Simulation at the critical spacing ]</div><figcaption>planned figure</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-002-results" aria-labelledby="t-002-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Olive%20%20Grove%20SIR/OliveGrove_results.png" alt="Olive grove simulation showing infected trees and the SIR curve" loading="lazy"><figcaption>Original grove simulation</figcaption></figure><figure><div class="no-figure">[ Theory against simulated infection curve ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Outbreak size with no simulation ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Critical spacing, checked by one run ]</div><figcaption>planned figure</figcaption></figure></div>
+            <p class="note">Results are added here as each run is finished.</p>
+          </div>
+          <div class="panel" role="tabpanel" id="p-002-pipeline" aria-labelledby="t-002-pipeline" hidden>
+            <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
+            <div class="pipe"><svg class="map" viewBox="0 0 1000 306" width="100%" role="img" aria-label="Olive Grove Xylella: Simulation and Percolation Pipeline" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah002" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2430bc"/></marker><marker id="am002" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6a6a70"/></marker></defs><text x="12" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">SOURCES</text><text x="212" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">SIMULATION</text><text x="412" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">MEASURED</text><text x="612" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">THEORY</text><text x="812" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">CHECKS</text><path class="edge" data-from="paper" data-to="abm" d="M170 81.0L190.0 81.0L190.0 81.0L210 81.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am002)"/><path class="edge" data-from="abm" data-to="log" d="M291.0 106L291.0 146" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah002)"/><path class="edge" data-from="abm" data-to="front" d="M370 81.0L390.0 81.0L390.0 81.0L410 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah002)"/><path class="edge" data-from="log" data-to="T" d="M370 173.0L390.0 173.0L390.0 173.0L410 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah002)"/><path class="edge" data-from="front" data-to="stair" d="M570 81.0L590.0 81.0L590.0 81.0L610 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah002)"/><path class="edge" data-from="T" data-to="pc" d="M570 173.0L590.0 173.0L590.0 173.0L610 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah002)"/><path class="edge" data-from="map" data-to="pc" d="M170 265.0L390.0 265.0L390.0 173.0L610 173.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am002)"/><path class="edge" data-from="stair" data-to="cmp" d="M770 81.0L790.0 81.0L790.0 81.0L810 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah002)"/><path class="edge" data-from="pc" data-to="size" d="M770 173.0L790.0 173.0L790.0 173.0L810 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah002)"/><path class="edge" data-from="pc" data-to="space" d="M770 173.0L790.0 173.0L790.0 265.0L810 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah002)"/><path class="edge" data-from="abm" data-to="cmp" d="M370 81.0L590.0 81.0L590.0 81.0L810 81.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am002)"/><g class="node" data-id="paper" tabindex="0" role="button" aria-label="Fierro et al. 2019: lattice vector model. Highlight its path"><rect x="12" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="77" font-size="12.5" fill="#1b1b1f">Fierro et al. 2019</text><text x="22" y="94" font-size="10.5" fill="#6a6a70">lattice vector model</text></g><g class="node" data-id="map" tabindex="0" role="button" aria-label="SIR-percolation: Grassberger, Newman. Highlight its path"><rect x="12" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="261" font-size="12.5" fill="#1b1b1f">SIR-percolation</text><text x="22" y="278" font-size="10.5" fill="#6a6a70">Grassberger, Newman</text></g><g class="node" data-id="abm" tabindex="0" role="button" aria-label="Grove simulation: 256 trees, 3 years. Highlight its path"><rect x="212" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="77" font-size="12.5" fill="#1b1b1f">Grove simulation</text><text x="222" y="94" font-size="10.5" fill="#6a6a70">256 trees, 3 years</text></g><g class="node" data-id="log" tabindex="0" role="button" aria-label="Transmission log: source, target, day. Highlight its path"><rect x="212" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="169" font-size="12.5" fill="#1b1b1f">Transmission log</text><text x="222" y="186" font-size="10.5" fill="#6a6a70">source, target, day</text></g><g class="node" data-id="front" tabindex="0" role="button" aria-label="Front speed v: distance per day. Highlight its path"><rect x="412" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="77" font-size="12.5" fill="#1b1b1f">Front speed v</text><text x="422" y="94" font-size="10.5" fill="#6a6a70">distance per day</text></g><g class="node" data-id="T" tabindex="0" role="button" aria-label="Transmissibility: T(d) by distance. Highlight its path"><rect x="412" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="169" font-size="12.5" fill="#1b1b1f">Transmissibility</text><text x="422" y="186" font-size="10.5" fill="#6a6a70">T(d) by distance</text></g><g class="node" data-id="stair" tabindex="0" role="button" aria-label="Front timeline: quadratic, stepped. Highlight its path"><rect x="612" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="77" font-size="12.5" fill="#1b1b1f">Front timeline</text><text x="622" y="94" font-size="10.5" fill="#6a6a70">quadratic, stepped</text></g><g class="node" data-id="pc" tabindex="0" role="button" aria-label="Bond percolation: threshold T_c. Highlight its path"><rect x="612" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="169" font-size="12.5" fill="#1b1b1f">Bond percolation</text><text x="622" y="186" font-size="10.5" fill="#6a6a70">threshold T_c</text></g><g class="node" data-id="cmp" tabindex="0" role="button" aria-label="Curve overlay: theory vs simulated. Highlight its path"><rect x="812" y="56" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="77" font-size="12.5" fill="#2430bc">Curve overlay</text><text x="822" y="94" font-size="10.5" fill="#6a6a70">theory vs simulated</text></g><g class="node" data-id="size" tabindex="0" role="button" aria-label="Outbreak size: no simulation. Highlight its path"><rect x="812" y="148" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="169" font-size="12.5" fill="#2430bc">Outbreak size</text><text x="822" y="186" font-size="10.5" fill="#6a6a70">no simulation</text></g><g class="node" data-id="space" tabindex="0" role="button" aria-label="Critical spacing: checked by one run. Highlight its path"><rect x="812" y="240" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="261" font-size="12.5" fill="#2430bc">Critical spacing</text><text x="822" y="278" font-size="10.5" fill="#6a6a70">checked by one run</text></g></svg></div>
+            <h5 class="flow-head">How the data flows</h5>
+            <ol class="flow"><li><b>Grove.</b> A 90 × 90 NumPy array of cell types (shrub 0, tree 1, empty 2), with trees planted as 3 × 3 blocks every 5 cells. Each tree&#39;s health, infection day and symptom day are held in dicts keyed by tree position.</li><li><b>Vectors.</b> The spittlebugs are stored as parallel arrays with one entry per insect: x and y positions (int16), and infected and alive flags (bool). The paper&#39;s density is sampled down for speed and transmission scaled up to compensate.</li><li><b>Time step.</b> 48 steps per day. Each step, every insect moves to a neighbouring cell with probabilities set by the cell type and the season (tender sprouts before day 185, hard after). An insect on an infected tree may pick up the bacterium; an infected insect on a healthy tree may pass it on.</li><li><b>Record.</b> Each day, the S, I and R tree counts and the infected-insect fraction are appended to history lists. The transmission log adds one row per infection: source tree, target tree, day.</li><li><b>Theory.</b> From the log, transmissions are binned by distance to give T(d), and the front position is fitted against time to give its speed. These feed the percolation calculation and the front-speed formula, which return predicted outbreak size and a predicted timeline.</li><li><b>Output.</b> A three-panel figure (grove map, SIR curves with seasonal phases, insect infection rate), with the theory curves overlaid on the simulated ones.</li></ol>
+          </div>
+        </div>
+      </div></div>
     </li>
-
     <li class="project" data-tag="signals">
       <button class="project-head" type="button" aria-expanded="false">
         <span class="num">003</span><span class="title">corrlib, a correlation toolbox</span>
         <span class="tag">Signals</span><span class="status">complete</span>
       </button>
-      <div class="more"><div><div class="detail">
-        <div class="text">
-          <p>A Python library for when correlation numbers mislead: tail dependence, the
-          fade in correlation at high sampling frequency, cleaning noisy matrices with
-          random matrix theory, and stacking many sensors into one signal.</p>
-          <p class="credit"><sup>†</sup>Builds on Epps (1979) and Laloux, Cizeau, Bouchaud
-          &amp; Potters (1999).</p>
-          <p class="stack">Python · NumPy · random matrix theory</p>
-          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Aim: tools for when a single correlation number misleads. Covers tail dependence, the loss of correlation at high sampling frequency (the Epps effect), cleaning noisy correlation matrices with random matrix theory, and minimum-variance weighting, the same formula that combines many sensors into one signal. Used by the seismic and solar projects.</p>
+            <p class="credit"><sup>†</sup>Builds on Epps (1979), Laloux, Cizeau, Bouchaud &amp; Potters (1999) and Capon (1969). Full list in the pipeline tab.</p>
+            <p class="stack">Python · NumPy · random matrix theory</p>
+            <a class="gh" href="https://github.com/kevingrainger/KevinGrainger_Rep">View on GitHub</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-003">+ view more</button>
+          </div>
+          <figure><div class="no-figure">[figure to come]</div></figure>
         </div>
-        <figure>
-          <div class="no-figure">[figure to come]</div>
-        </figure>
-      </div></div></div>
+        <div class="ext" id="ext-003" hidden>
+          <div class="tabs" role="tablist" aria-label="corrlib, a correlation toolbox sections">
+            <button type="button" role="tab" id="t-003-method" aria-controls="p-003-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-003-results" aria-controls="p-003-results" aria-selected="false" tabindex="-1">results</button>
+            <button type="button" role="tab" id="t-003-pipeline" aria-controls="p-003-pipeline" aria-selected="false" tabindex="-1">pipeline</button>
+          </div>
+          <div class="panel" role="tabpanel" id="p-003-method" aria-labelledby="t-003-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Choose what to measure</h5><p>Linear (Pearson), rank, tail, lead-lag and partial correlation answer different questions, so the library keeps them separate rather than reporting one number.</p></div><figure><div class="no-figure">[ Same data, five measures ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Estimate from irregular ticks</h5><p>Correlation between two prices fades as you sample them faster, an artefact called the Epps effect. The Hayashi–Yoshida estimator works on the raw timestamps and avoids it.</p></div><figure><div class="no-figure">[ Correlation against sampling interval ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Separate signal from noise</h5><p>With N variables and T observations, pure noise spreads eigenvalues over a predictable band (Marchenko–Pastur). Eigenvalues above the band are signal; the rest are clipped or shrunk. Tyler&#39;s estimator handles heavy-tailed data.</p></div><figure><div class="no-figure">[ Eigenvalue spectrum against the noise band ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Use the cleaned matrix</h5><p>Count the independent modes (effective rank) and compute minimum-variance weights. The same formula gives optimal sensor weights in beamforming, which the seismic and solar projects import.</p></div><figure><div class="no-figure">[ Array gain against the square-root-of-N line ]</div><figcaption>planned figure</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-003-results" aria-labelledby="t-003-results" hidden>
+            <div class="results"><figure><div class="no-figure">[ Effective rank, raw against cleaned ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Optimal weights ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Array gain against the square-root-of-N line ]</div><figcaption>planned figure</figcaption></figure></div>
+            <p class="note">Results are added here as each run is finished.</p>
+          </div>
+          <div class="panel" role="tabpanel" id="p-003-pipeline" aria-labelledby="t-003-pipeline" hidden>
+            <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
+            <div class="pipe"><svg class="map" viewBox="0 0 1000 306" width="100%" role="img" aria-label="corrlib: Correlation Toolbox Pipeline" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah003" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2430bc"/></marker><marker id="am003" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6a6a70"/></marker></defs><text x="12" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">INPUT</text><text x="212" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">MEASURE AND ESTIMATE</text><text x="412" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">MATRIX</text><text x="612" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">CLEAN</text><text x="812" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">USE</text><path class="edge" data-from="X" data-to="meas" d="M170 81.0L190.0 81.0L190.0 81.0L210 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah003)"/><path class="edge" data-from="ticks" data-to="est" d="M170 173.0L190.0 173.0L190.0 173.0L210 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah003)"/><path class="edge" data-from="meas" data-to="C" d="M370 81.0L390.0 81.0L390.0 173.0L410 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah003)"/><path class="edge" data-from="est" data-to="C" d="M370 173.0L390.0 173.0L390.0 173.0L410 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah003)"/><path class="edge" data-from="est" data-to="epps" d="M370 173.0L390.0 173.0L390.0 265.0L410 265.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am003)"/><path class="edge" data-from="C" data-to="clean" d="M570 173.0L590.0 173.0L590.0 173.0L610 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah003)"/><path class="edge" data-from="C" data-to="band" d="M570 173.0L590.0 173.0L590.0 81.0L610 81.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am003)"/><path class="edge" data-from="band" data-to="clean" d="M691.0 106L691.0 146" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am003)"/><path class="edge" data-from="tyler" data-to="clean" d="M691.0 240L691.0 200" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am003)"/><path class="edge" data-from="clean" data-to="stack" d="M770 173.0L790.0 173.0L790.0 173.0L810 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah003)"/><path class="edge" data-from="clean" data-to="rank" d="M770 173.0L790.0 173.0L790.0 81.0L810 81.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am003)"/><path class="edge" data-from="stack" data-to="gain" d="M891.0 198L891.0 238" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah003)"/><g class="node" data-id="X" tabindex="0" role="button" aria-label="Data matrix X: variables x time. Highlight its path"><rect x="12" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="22" y="77" font-size="12.5" fill="#1b1b1f">Data matrix X</text><text x="22" y="94" font-size="10.5" fill="#6a6a70">variables x time</text></g><g class="node" data-id="ticks" tabindex="0" role="button" aria-label="Tick data: irregular timestamps. Highlight its path"><rect x="12" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="169" font-size="12.5" fill="#1b1b1f">Tick data</text><text x="22" y="186" font-size="10.5" fill="#6a6a70">irregular timestamps</text></g><g class="node" data-id="meas" tabindex="0" role="button" aria-label="Measures: Pearson, rank, tail. Highlight its path"><rect x="212" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="77" font-size="12.5" fill="#1b1b1f">Measures</text><text x="222" y="94" font-size="10.5" fill="#6a6a70">Pearson, rank, tail</text></g><g class="node" data-id="est" tabindex="0" role="button" aria-label="Tick estimators: Hayashi-Yoshida. Highlight its path"><rect x="212" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="169" font-size="12.5" fill="#1b1b1f">Tick estimators</text><text x="222" y="186" font-size="10.5" fill="#6a6a70">Hayashi-Yoshida</text></g><g class="node" data-id="C" tabindex="0" role="button" aria-label="Correlation C: with q = N / T. Highlight its path"><rect x="412" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="169" font-size="12.5" fill="#1b1b1f">Correlation C</text><text x="422" y="186" font-size="10.5" fill="#6a6a70">with q = N / T</text></g><g class="node" data-id="epps" tabindex="0" role="button" aria-label="Epps curve: corr vs sampling. Highlight its path"><rect x="412" y="240" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="422" y="261" font-size="12.5" fill="#2430bc">Epps curve</text><text x="422" y="278" font-size="10.5" fill="#6a6a70">corr vs sampling</text></g><g class="node" data-id="band" tabindex="0" role="button" aria-label="Noise band: Marchenko-Pastur. Highlight its path"><rect x="612" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="77" font-size="12.5" fill="#1b1b1f">Noise band</text><text x="622" y="94" font-size="10.5" fill="#6a6a70">Marchenko-Pastur</text></g><g class="node" data-id="clean" tabindex="0" role="button" aria-label="Cleaners: clip, shrinkage. Highlight its path"><rect x="612" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="169" font-size="12.5" fill="#1b1b1f">Cleaners</text><text x="622" y="186" font-size="10.5" fill="#6a6a70">clip, shrinkage</text></g><g class="node" data-id="tyler" tabindex="0" role="button" aria-label="Tyler estimator: heavy-tailed data. Highlight its path"><rect x="612" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="261" font-size="12.5" fill="#1b1b1f">Tyler estimator</text><text x="622" y="278" font-size="10.5" fill="#6a6a70">heavy-tailed data</text></g><g class="node" data-id="rank" tabindex="0" role="button" aria-label="Effective rank: independent modes. Highlight its path"><rect x="812" y="56" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="77" font-size="12.5" fill="#2430bc">Effective rank</text><text x="822" y="94" font-size="10.5" fill="#6a6a70">independent modes</text></g><g class="node" data-id="stack" tabindex="0" role="button" aria-label="Optimal weights: MVDR = min variance. Highlight its path"><rect x="812" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="822" y="169" font-size="12.5" fill="#1b1b1f">Optimal weights</text><text x="822" y="186" font-size="10.5" fill="#6a6a70">MVDR = min variance</text></g><g class="node" data-id="gain" tabindex="0" role="button" aria-label="Array gain: vs sqrt(N) line. Highlight its path"><rect x="812" y="240" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="261" font-size="12.5" fill="#2430bc">Array gain</text><text x="822" y="278" font-size="10.5" fill="#6a6a70">vs sqrt(N) line</text></g></svg></div>
+            <h5 class="flow-head">How the data flows</h5>
+            <ol class="flow"><li><b>Input.</b> A NumPy array X with one row per variable and one column per time step. For tick data, one pair of arrays per asset instead: timestamps and values, left unaligned.</li><li><b>Measure.</b> Each measure (Pearson, rank, tail, lead-lag, partial) is a function that returns an N × N matrix. The Hayashi–Yoshida estimator works directly on the unaligned timestamps, so nothing is resampled.</li><li><b>Clean.</b> From the matrix and q = N / T, compute the Marchenko–Pastur noise band. Cleaners return a new N × N matrix with the noise eigenvalues clipped or shrunk; Tyler&#39;s estimator replaces the sample matrix for heavy-tailed data.</li><li><b>Use.</b> Effective rank returns one number. Optimal weights return a length-N vector summing to 1. Array gain compares the noise of the weighted stack with the √N line expected from plain averaging.</li><li><b>Output.</b> Plain arrays and numbers, so other projects import the modules directly: the seismic denoiser uses stacking and cleaning, the Spanish solar project uses cleaning, effective rank and loadings.</li></ol>
+          </div>
+        </div>
+      </div></div>
     </li>
-
     <li class="project" data-tag="signals">
       <button class="project-head" type="button" aria-expanded="false">
         <span class="num">004</span><span class="title">Seismic denoiser</span>
         <span class="tag">Signals</span><span class="status">in progress</span>
       </button>
-      <div class="more"><div><div class="detail">
-        <div class="text">
-          <p>Earthquake detection in noisy seismometer records. An imported detector is
-          compared against the STA/LTA baseline, then array stacking is added, from
-          simple averaging up to optimal weights.</p>
-          <p class="credit"><sup>†</sup>Detector by [ORIGINAL AUTHORS]. Waveforms from the
-          Southern California Earthquake Data Center.</p>
-          <p class="stack">Python · signal processing · beamforming · corrlib</p>
-          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Aim: detect smaller earthquakes in noisy urban seismometer records. Random matrix theory and wavelet thresholding recover P-wave onsets from labelled Southern California waveforms. The next stage scores five detection methods on one test, from the field-standard STA/LTA trigger to optimally weighted array stacking.</p>
+            <p class="credit"><sup>†</sup>STA/LTA from Allen (1978); optimal array weights from Capon (1969). Waveforms from the Southern California Earthquake Data Center. Imported denoiser by [ORIGINAL AUTHORS].</p>
+            <p class="stack">Python · signal processing · beamforming · corrlib</p>
+            <a class="gh" href="https://github.com/kevingrainger/KevinGrainger_Rep/tree/main/Seismic%20Time%20Series%20denoising">View on GitHub</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-004">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Seismic%20Time%20Series%20denoising/Denoised_waveform.png" alt="Seismic waveform before and after denoising" loading="lazy"><figcaption>Denoised waveform</figcaption></figure>
         </div>
-        <figure>
-          <img src="images/seismic-denoised.png" alt="Seismic waveform before and after denoising" loading="lazy">
-          <figcaption>Denoised waveform</figcaption>
-        </figure>
-      </div></div></div>
+        <div class="ext" id="ext-004" hidden>
+          <div class="tabs" role="tablist" aria-label="Seismic denoiser sections">
+            <button type="button" role="tab" id="t-004-method" aria-controls="p-004-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-004-results" aria-controls="p-004-results" aria-selected="false" tabindex="-1">results</button>
+            <button type="button" role="tab" id="t-004-pipeline" aria-controls="p-004-pipeline" aria-selected="false" tabindex="-1">pipeline</button>
+          </div>
+          <div class="panel" role="tabpanel" id="p-004-method" aria-labelledby="t-004-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Gather the data</h5><p>Noisy station-days of waveforms, plus the catalogue of events and analyst picks, from the Southern California Earthquake Data Center.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Seismic%20Time%20Series%20denoising/Denoised_waveform.png" alt="Seismic waveform before and after denoising" loading="lazy"><figcaption>Denoised waveform</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Act 1: one trace</h5><p>STA/LTA compares the short-term average energy of a trace with its long-term average and triggers when the ratio jumps. Run it on the raw trace (M1) and on the imported denoiser&#39;s output (M2).</p></div><figure><div class="no-figure">[ Raw and denoised trace with picks ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Act 2: the whole array</h5><p>Combine many stations: plain delay-and-sum (M3), optimal weights (M4), and optimal weights with a cleaned covariance from corrlib (M5).</p></div><figure><div class="no-figure">[ Stacked trace for each method ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Score all five the same way</h5><p>Report the smallest magnitude reliably detected (Mc), with the b value as a check the new detections are real; pick-time bias against analysts; and the window length at which optimal weights start to beat averaging.</p></div><figure><div class="no-figure">[ Scoreboard ]</div><figcaption>planned figure</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-004-results" aria-labelledby="t-004-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Seismic%20Time%20Series%20denoising/Denoised_waveform.png" alt="Seismic waveform before and after denoising" loading="lazy"><figcaption>Denoised waveform</figcaption></figure><figure><div class="no-figure">[ Completeness magnitude, raw against denoised ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Pick bias, early or late ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Crossover by window length ]</div><figcaption>planned figure</figcaption></figure></div>
+            <p class="note">Results are added here as each run is finished.</p>
+          </div>
+          <div class="panel" role="tabpanel" id="p-004-pipeline" aria-labelledby="t-004-pipeline" hidden>
+            <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
+            <div class="pipe"><svg class="map" viewBox="0 0 1000 306" width="100%" role="img" aria-label="Seismic Denoiser: Method Comparison Pipeline" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah004" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2430bc"/></marker><marker id="am004" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6a6a70"/></marker></defs><text x="12" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">DATA</text><text x="212" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">METHODS</text><text x="412" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">DETECTOR</text><text x="612" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">SCOREBOARD</text><text x="812" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">RESULTS</text><path class="edge" data-from="wave" data-to="single" d="M170 81.0L190.0 81.0L190.0 81.0L210 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah004)"/><path class="edge" data-from="corr" data-to="array" d="M170 173.0L190.0 173.0L190.0 173.0L210 173.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am004)"/><path class="edge" data-from="single" data-to="pick" d="M370 81.0L390.0 81.0L390.0 81.0L410 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah004)"/><path class="edge" data-from="array" data-to="pick" d="M370 173.0L390.0 173.0L390.0 81.0L410 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah004)"/><path class="edge" data-from="pick" data-to="score" d="M570 81.0L590.0 81.0L590.0 81.0L610 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah004)"/><path class="edge" data-from="cat" data-to="score" d="M170 265.0L390.0 265.0L390.0 81.0L610 81.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am004)"/><path class="edge" data-from="score" data-to="mc" d="M770 81.0L790.0 81.0L790.0 81.0L810 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah004)"/><path class="edge" data-from="score" data-to="bias" d="M770 81.0L790.0 81.0L790.0 173.0L810 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah004)"/><path class="edge" data-from="score" data-to="cross" d="M770 81.0L790.0 81.0L790.0 265.0L810 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah004)"/><g class="node" data-id="wave" tabindex="0" role="button" aria-label="SCEDC waveforms: noisy station-days. Highlight its path"><rect x="12" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="77" font-size="12.5" fill="#1b1b1f">SCEDC waveforms</text><text x="22" y="94" font-size="10.5" fill="#6a6a70">noisy station-days</text></g><g class="node" data-id="corr" tabindex="0" role="button" aria-label="corrlib: stacking, cleaning. Highlight its path"><rect x="12" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="169" font-size="12.5" fill="#1b1b1f">corrlib</text><text x="22" y="186" font-size="10.5" fill="#6a6a70">stacking, cleaning</text></g><g class="node" data-id="cat" tabindex="0" role="button" aria-label="SCEDC catalogue: events and picks. Highlight its path"><rect x="12" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="261" font-size="12.5" fill="#1b1b1f">SCEDC catalogue</text><text x="22" y="278" font-size="10.5" fill="#6a6a70">events and picks</text></g><g class="node" data-id="single" tabindex="0" role="button" aria-label="Single trace: raw and denoised. Highlight its path"><rect x="212" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="77" font-size="12.5" fill="#1b1b1f">Single trace</text><text x="222" y="94" font-size="10.5" fill="#6a6a70">raw and denoised</text></g><g class="node" data-id="array" tabindex="0" role="button" aria-label="Array stack: sum, MVDR, cleaned. Highlight its path"><rect x="212" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="169" font-size="12.5" fill="#1b1b1f">Array stack</text><text x="222" y="186" font-size="10.5" fill="#6a6a70">sum, MVDR, cleaned</text></g><g class="node" data-id="pick" tabindex="0" role="button" aria-label="STA/LTA picker: same threshold. Highlight its path"><rect x="412" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="77" font-size="12.5" fill="#1b1b1f">STA/LTA picker</text><text x="422" y="94" font-size="10.5" fill="#6a6a70">same threshold</text></g><g class="node" data-id="score" tabindex="0" role="button" aria-label="Scoreboard: 5 methods, one test. Highlight its path"><rect x="612" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="77" font-size="12.5" fill="#1b1b1f">Scoreboard</text><text x="622" y="94" font-size="10.5" fill="#6a6a70">5 methods, one test</text></g><g class="node" data-id="mc" tabindex="0" role="button" aria-label="Completeness Mc: Gutenberg-Richter. Highlight its path"><rect x="812" y="56" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="77" font-size="12.5" fill="#2430bc">Completeness Mc</text><text x="822" y="94" font-size="10.5" fill="#6a6a70">Gutenberg-Richter</text></g><g class="node" data-id="bias" tabindex="0" role="button" aria-label="Pick bias: early or late. Highlight its path"><rect x="812" y="148" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="169" font-size="12.5" fill="#2430bc">Pick bias</text><text x="822" y="186" font-size="10.5" fill="#6a6a70">early or late</text></g><g class="node" data-id="cross" tabindex="0" role="button" aria-label="Crossover: by window length. Highlight its path"><rect x="812" y="240" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="261" font-size="12.5" fill="#2430bc">Crossover</text><text x="822" y="278" font-size="10.5" fill="#6a6a70">by window length</text></g></svg></div>
+            <h5 class="flow-head">How the data flows</h5>
+            <p class="flow-note">Steps 1–2 are the code in the repo now; steps 3–4 are the planned scoreboard.</p><ol class="flow"><li><b>Input.</b> An HDF5 file of labelled waveforms: <code>X</code> (one row per recording, samples along the row), <code>Y</code> (label), <code>mag</code>, <code>snr</code>, <code>dist</code> and <code>sncls</code> (station code). Boolean masks keep CI-network recordings that are local (≤ 50 km), small (M ≤ 3.5) and in the lowest 20% of signal-to-noise.</li><li><b>Denoise.</b> The selected waveforms are stacked into a matrix (recordings × samples). Its correlation matrix is eigendecomposed, only eigenvalues above the Marchenko–Pastur noise edge are kept, and the matrix is rebuilt. Each trace is then wavelet-denoised (db4, 4 levels, soft threshold).</li><li><b>Detect.</b> The same STA/LTA picker runs on five versions of each record: raw, imported denoiser, delay-and-sum stack, optimal weights, and optimal weights with a cleaned covariance. Each gives a pick time and a detected or missed flag.</li><li><b>Output.</b> One table with a row per event per method, compared with the catalogue picks to give the completeness magnitude, pick bias and crossover window.</li></ol>
+          </div>
+        </div>
+      </div></div>
     </li>
-
     <li class="project" data-tag="markets">
       <button class="project-head" type="button" aria-expanded="false">
         <span class="num">005</span><span class="title">Option pricer: European, American, Asian</span>
         <span class="tag">Markets</span><span class="status">in progress</span>
       </button>
-      <div class="more"><div><div class="detail">
-        <div class="text">
-          <p>Black–Scholes with time-varying volatility, calibrated to SPX and SET50 option
-          chains. American options by projected SOR; Asian options by the Večeř reduction,
-          checked by Monte Carlo.</p>
-          <p class="credit"><sup>†</sup>Asian pricing method from Večeř (2001).</p>
-          <p class="stack">Python · finite difference · projected SOR · Monte Carlo</p>
-          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Aim: price European, American and Asian options when volatility changes over time. Finite-difference PDE solvers using successive over-relaxation (SOR) are calibrated to real SPX option chains and validated against exact formulas, binomial trees and Monte Carlo, with a measured convergence order.</p>
+            <p class="credit"><sup>†</sup>Asian method from Večeř (2001), after Rogers &amp; Shi (1995). Projected SOR as in Wilmott, Howison &amp; Dewynne (1995).</p>
+            <p class="stack">Python · finite difference · projected SOR · Monte Carlo</p>
+            <a class="gh" href="https://github.com/kevingrainger/KevinGrainger_Rep">View on GitHub</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-005">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/PDE%203D%20Plots.png" alt="Three-dimensional surface plots of PDE solutions" loading="lazy"><figcaption>Older figure: 3D SOR solutions, placeholder</figcaption></figure>
         </div>
-        <figure>
-          <img src="images/pde-plots.png" alt="Three-dimensional surface plots of PDE solutions" loading="lazy">
-          <figcaption>Older figure: 3D SOR solutions, placeholder</figcaption>
-        </figure>
-      </div></div></div>
+        <div class="ext" id="ext-005" hidden>
+          <div class="tabs" role="tablist" aria-label="Option pricer: European, American, Asian sections">
+            <button type="button" role="tab" id="t-005-method" aria-controls="p-005-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-005-results" aria-controls="p-005-results" aria-selected="false" tabindex="-1">results</button>
+            <button type="button" role="tab" id="t-005-pipeline" aria-controls="p-005-pipeline" aria-selected="false" tabindex="-1">pipeline</button>
+          </div>
+          <div class="panel" role="tabpanel" id="p-005-method" aria-labelledby="t-005-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Read the market</h5><p>From the SPX chain of 4 January 2023, put-call parity gives the forward price and the discount factor. The implied interest rate is checked against January 2023 rates.</p></div><figure><div class="no-figure">[ Implied rate against maturity ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Let volatility depend on time</h5><p>Read forward volatility σ(t) off the chain. European prices then depend only on the integrated variance, so an exact formula remains to test the solver against.</p></div><figure><div class="no-figure">[ σ(t) curve ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Solve and validate</h5><p>Solve the PDE on a log-price grid with SOR, compare European prices with the exact formula, and fit the convergence order.</p></div><figure><div class="no-figure">[ Convergence order, fitted ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>American and Asian options</h5><p>American options need a free boundary, found by projected SOR and checked against a binomial tree. Asian options reduce to one dimension (Večeř) and are checked by Monte Carlo with a control variate. Asian pricing and SET50 are in progress.</p></div><figure><div class="no-figure">[ Exercise boundary on the value surface ]</div><figcaption>planned figure</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-005-results" aria-labelledby="t-005-results" hidden>
+            <div class="results"><figure><div class="no-figure">[ Exercise boundary on the value surface ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Convergence, order 2 ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ PDE against Monte Carlo ]</div><figcaption>planned figure</figcaption></figure></div>
+            <p class="note">Results are added here as each run is finished.</p>
+          </div>
+          <div class="panel" role="tabpanel" id="p-005-pipeline" aria-labelledby="t-005-pipeline" hidden>
+            <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
+            <div class="pipe"><svg class="map" viewBox="0 0 1000 306" width="100%" role="img" aria-label="Option Pricer: Calibration, Solvers and Validation" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah005" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2430bc"/></marker><marker id="am005" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6a6a70"/></marker></defs><text x="12" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">MARKET</text><text x="212" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">EXTRACT</text><text x="412" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">PRICERS</text><text x="612" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">INDEPENDENT CHECK</text><text x="812" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">EVIDENCE</text><path class="edge" data-from="spx" data-to="par" d="M170 81.0L190.0 81.0L190.0 81.0L210 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="set" data-to="sig" d="M170 173.0L190.0 173.0L190.0 173.0L210 173.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am005)"/><path class="edge" data-from="par" data-to="sig" d="M291.0 106L291.0 146" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="sig" data-to="pde" d="M370 173.0L390.0 173.0L390.0 173.0L410 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="pde" data-to="psor" d="M491.0 148L491.0 108" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="pde" data-to="vec" d="M491.0 198L491.0 238" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="psor" data-to="tree" d="M570 81.0L590.0 81.0L590.0 81.0L610 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="pde" data-to="cf" d="M570 173.0L590.0 173.0L590.0 173.0L610 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="vec" data-to="mc" d="M570 265.0L590.0 265.0L590.0 265.0L610 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="tree" data-to="bnd" d="M770 81.0L790.0 81.0L790.0 81.0L810 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="cf" data-to="conv" d="M770 173.0L790.0 173.0L790.0 173.0L810 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><path class="edge" data-from="mc" data-to="agree" d="M770 265.0L790.0 265.0L790.0 265.0L810 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah005)"/><g class="node" data-id="spx" tabindex="0" role="button" aria-label="SPX chain: 4 January 2023. Highlight its path"><rect x="12" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="77" font-size="12.5" fill="#1b1b1f">SPX chain</text><text x="22" y="94" font-size="10.5" fill="#6a6a70">4 January 2023</text></g><g class="node" data-id="set" tabindex="0" role="button" aria-label="SET50 chain: TFEX, European. Highlight its path"><rect x="12" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="169" font-size="12.5" fill="#1b1b1f">SET50 chain</text><text x="22" y="186" font-size="10.5" fill="#6a6a70">TFEX, European</text></g><g class="node" data-id="par" tabindex="0" role="button" aria-label="Put-call parity: forward, discount. Highlight its path"><rect x="212" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="77" font-size="12.5" fill="#1b1b1f">Put-call parity</text><text x="222" y="94" font-size="10.5" fill="#6a6a70">forward, discount</text></g><g class="node" data-id="sig" tabindex="0" role="button" aria-label="sigma(t) curve: forward volatility. Highlight its path"><rect x="212" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="169" font-size="12.5" fill="#1b1b1f">sigma(t) curve</text><text x="222" y="186" font-size="10.5" fill="#6a6a70">forward volatility</text></g><g class="node" data-id="psor" tabindex="0" role="button" aria-label="Projected SOR: American boundary. Highlight its path"><rect x="412" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="77" font-size="12.5" fill="#1b1b1f">Projected SOR</text><text x="422" y="94" font-size="10.5" fill="#6a6a70">American boundary</text></g><g class="node" data-id="pde" tabindex="0" role="button" aria-label="PDE solver: log-price grid, SOR. Highlight its path"><rect x="412" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="169" font-size="12.5" fill="#1b1b1f">PDE solver</text><text x="422" y="186" font-size="10.5" fill="#6a6a70">log-price grid, SOR</text></g><g class="node" data-id="vec" tabindex="0" role="button" aria-label="Vecer reduction: Asian, one dimension. Highlight its path"><rect x="412" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="261" font-size="12.5" fill="#1b1b1f">Vecer reduction</text><text x="422" y="278" font-size="10.5" fill="#6a6a70">Asian, one dimension</text></g><g class="node" data-id="tree" tabindex="0" role="button" aria-label="Binomial tree: American benchmark. Highlight its path"><rect x="612" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="77" font-size="12.5" fill="#1b1b1f">Binomial tree</text><text x="622" y="94" font-size="10.5" fill="#6a6a70">American benchmark</text></g><g class="node" data-id="cf" tabindex="0" role="button" aria-label="Closed form: integrated variance. Highlight its path"><rect x="612" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="169" font-size="12.5" fill="#1b1b1f">Closed form</text><text x="622" y="186" font-size="10.5" fill="#6a6a70">integrated variance</text></g><g class="node" data-id="mc" tabindex="0" role="button" aria-label="Monte Carlo: control variate. Highlight its path"><rect x="612" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="261" font-size="12.5" fill="#1b1b1f">Monte Carlo</text><text x="622" y="278" font-size="10.5" fill="#6a6a70">control variate</text></g><g class="node" data-id="bnd" tabindex="0" role="button" aria-label="Exercise boundary: on the value surface. Highlight its path"><rect x="812" y="56" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="77" font-size="12.5" fill="#2430bc">Exercise boundary</text><text x="822" y="94" font-size="10.5" fill="#6a6a70">on the value surface</text></g><g class="node" data-id="conv" tabindex="0" role="button" aria-label="Convergence: order 2, fitted. Highlight its path"><rect x="812" y="148" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="169" font-size="12.5" fill="#2430bc">Convergence</text><text x="822" y="186" font-size="10.5" fill="#6a6a70">order 2, fitted</text></g><g class="node" data-id="agree" tabindex="0" role="button" aria-label="PDE vs MC: matching decimals. Highlight its path"><rect x="812" y="240" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="261" font-size="12.5" fill="#2430bc">PDE vs MC</text><text x="822" y="278" font-size="10.5" fill="#6a6a70">matching decimals</text></g></svg></div>
+            <h5 class="flow-head">How the data flows</h5>
+            <p class="flow-note">Planned structure; Asian pricing and the SET50 calibration are still being built.</p><ol class="flow"><li><b>Input.</b> One day&#39;s option chain (SPX, 4 January 2023) as a table with one row per contract: strike, expiry, call or put, bid and ask.</li><li><b>Extract.</b> For each expiry, calls and puts at the same strike are paired, and a put-call parity regression gives the forward price and discount factor. Implied volatilities give total variance per expiry, and differencing that gives σ(t) as a piecewise function.</li><li><b>Solve.</b> The price lives on a 2D NumPy grid (log-price × time), solved backwards from the payoff with SOR. For American options, each sweep also takes the maximum of the value and the payoff, which finds the exercise boundary.</li><li><b>Check.</b> The same contracts are priced by the exact formula, a binomial tree and Monte Carlo. The error against grid size gives the convergence order.</li><li><b>Output.</b> Price surfaces as arrays, the exercise boundary as one price per time step, and a convergence table.</li></ol>
+          </div>
+        </div>
+      </div></div>
     </li>
-
     <li class="project" data-tag="markets">
       <button class="project-head" type="button" aria-expanded="false">
         <span class="num">006</span><span class="title">Italian power price volatility</span>
         <span class="tag">Markets</span><span class="status">in progress</span>
       </button>
-      <div class="more"><div><div class="detail">
-        <div class="text">
-          <p>How weather drives Italian electricity price volatility, then whether seasonal
-          weather forecasts can predict it ahead of time.</p>
-          <p class="credit"><sup>†</sup>Replication of Guerzoni, Riso &amp; Zoia (2026), extended
-          with SEAS5 forecasts.</p>
-          <p class="stack">Python · GARCH-MIDAS · ERA5 · SEAS5</p>
-          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Aim: forecast Italian electricity price volatility a season ahead. Replicates a GARCH-MIDAS model linking volatility to extreme weather, then replaces observed weather with ECMWF seasonal forecasts and measures how many months ahead the forecast still adds skill.</p>
+            <p class="credit"><sup>†</sup>Replication of Guerzoni, Riso &amp; Zoia (2026), extended with SEAS5 forecasts. GARCH-MIDAS from Engle, Ghysels &amp; Sohn (2013).</p>
+            <p class="stack">Python · GARCH-MIDAS · ERA5 · SEAS5</p>
+            <a class="gh" href="https://github.com/kevingrainger/KevinGrainger_Rep">View on GitHub</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-006">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Hidden%20Markov%20Model%20Oil%20Volatility%20Measure.png" alt="Volatility state classification over an oil price time series" loading="lazy"><figcaption>Older figure: HMM volatility, placeholder</figcaption></figure>
         </div>
-        <figure>
-          <img src="images/hmm-volatility.png" alt="Volatility state classification over an oil price time series" loading="lazy">
-          <figcaption>Older figure: HMM volatility, placeholder</figcaption>
-        </figure>
-      </div></div></div>
+        <div class="ext" id="ext-006" hidden>
+          <div class="tabs" role="tablist" aria-label="Italian power price volatility sections">
+            <button type="button" role="tab" id="t-006-method" aria-controls="p-006-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-006-results" aria-controls="p-006-results" aria-selected="false" tabindex="-1">results</button>
+            <button type="button" role="tab" id="t-006-pipeline" aria-controls="p-006-pipeline" aria-selected="false" tabindex="-1">pipeline</button>
+          </div>
+          <div class="panel" role="tabpanel" id="p-006-method" aria-labelledby="t-006-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Gather prices and weather</h5><p>Italian day-ahead prices (GME), observed weather (ERA5) and 25-member seasonal forecasts (SEAS5).</p></div><figure><div class="no-figure">[ Price returns and monthly weather extremes ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Replicate the paper</h5><p>GARCH-MIDAS splits daily variance into a slow level times a fast GARCH part. The slow level is a weighted average of past monthly weather extremes.</p></div><figure><div class="no-figure">[ Slow and fast volatility components ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Swap in forecasts</h5><p>Replace observed weather with SEAS5 forecasts made in advance, bias-corrected by quantile mapping, so the model can be used before the season happens.</p></div><figure><div class="no-figure">[ Forecast against observed extremes ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Score out of sample</h5><p>Score three models on the same unseen window: no weather, observed weather, forecast weather. The result is the forecast lead, in months, at which the advantage disappears.</p></div><figure><div class="no-figure">[ Skill against forecast lead ]</div><figcaption>planned figure</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-006-results" aria-labelledby="t-006-results" hidden>
+            <div class="results"><figure><div class="no-figure">[ Skill horizon: months of advantage ]</div><figcaption>planned figure</figcaption></figure></div>
+            <p class="note">Results are added here as each run is finished.</p>
+          </div>
+          <div class="panel" role="tabpanel" id="p-006-pipeline" aria-labelledby="t-006-pipeline" hidden>
+            <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
+            <div class="pipe"><svg class="map" viewBox="0 0 1000 306" width="100%" role="img" aria-label="Italian Power Price Volatility: Forecasting Pipeline" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah006" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2430bc"/></marker><marker id="am006" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6a6a70"/></marker></defs><text x="12" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">DATA</text><text x="212" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">FEATURES</text><text x="412" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">MODELS</text><text x="612" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">OUT-OF-SAMPLE TEST</text><text x="812" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">RESULT</text><path class="edge" data-from="gme" data-to="ret" d="M170 81.0L190.0 81.0L190.0 81.0L210 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah006)"/><path class="edge" data-from="era" data-to="ext" d="M170 173.0L190.0 173.0L190.0 173.0L210 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah006)"/><path class="edge" data-from="seas" data-to="bc" d="M170 265.0L190.0 265.0L190.0 265.0L210 265.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am006)"/><path class="edge" data-from="ext" data-to="bc" d="M291.0 198L291.0 238" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am006)"/><path class="edge" data-from="ret" data-to="n1" d="M370 81.0L390.0 81.0L390.0 81.0L410 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah006)"/><path class="edge" data-from="ext" data-to="n2" d="M370 173.0L390.0 173.0L390.0 173.0L410 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah006)"/><path class="edge" data-from="bc" data-to="n3" d="M370 265.0L390.0 265.0L390.0 265.0L410 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah006)"/><path class="edge" data-from="n2" data-to="score" d="M570 173.0L590.0 173.0L590.0 173.0L610 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah006)"/><path class="edge" data-from="n1" data-to="score" d="M570 81.0L590.0 81.0L590.0 173.0L610 173.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am006)"/><path class="edge" data-from="n3" data-to="score" d="M570 265.0L590.0 265.0L590.0 173.0L610 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah006)"/><path class="edge" data-from="score" data-to="hor" d="M770 173.0L790.0 173.0L790.0 173.0L810 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah006)"/><g class="node" data-id="gme" tabindex="0" role="button" aria-label="GME prices: day-ahead, Italy. Highlight its path"><rect x="12" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="77" font-size="12.5" fill="#1b1b1f">GME prices</text><text x="22" y="94" font-size="10.5" fill="#6a6a70">day-ahead, Italy</text></g><g class="node" data-id="era" tabindex="0" role="button" aria-label="ERA5: observed weather. Highlight its path"><rect x="12" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="169" font-size="12.5" fill="#1b1b1f">ERA5</text><text x="22" y="186" font-size="10.5" fill="#6a6a70">observed weather</text></g><g class="node" data-id="seas" tabindex="0" role="button" aria-label="SEAS5: 25-member forecast. Highlight its path"><rect x="12" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="261" font-size="12.5" fill="#1b1b1f">SEAS5</text><text x="22" y="278" font-size="10.5" fill="#6a6a70">25-member forecast</text></g><g class="node" data-id="ret" tabindex="0" role="button" aria-label="Daily returns: shared by all models. Highlight its path"><rect x="212" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="77" font-size="12.5" fill="#1b1b1f">Daily returns</text><text x="222" y="94" font-size="10.5" fill="#6a6a70">shared by all models</text></g><g class="node" data-id="ext" tabindex="0" role="button" aria-label="Extreme indices: monthly extremes. Highlight its path"><rect x="212" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="169" font-size="12.5" fill="#1b1b1f">Extreme indices</text><text x="222" y="186" font-size="10.5" fill="#6a6a70">monthly extremes</text></g><g class="node" data-id="bc" tabindex="0" role="button" aria-label="Bias correction: quantile mapping. Highlight its path"><rect x="212" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="261" font-size="12.5" fill="#1b1b1f">Bias correction</text><text x="222" y="278" font-size="10.5" fill="#6a6a70">quantile mapping</text></g><g class="node" data-id="n1" tabindex="0" role="button" aria-label="GARCH(1,1): null, no weather. Highlight its path"><rect x="412" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="77" font-size="12.5" fill="#1b1b1f">GARCH(1,1)</text><text x="422" y="94" font-size="10.5" fill="#6a6a70">null, no weather</text></g><g class="node" data-id="n2" tabindex="0" role="button" aria-label="GARCH-MIDAS: observed weather. Highlight its path"><rect x="412" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="169" font-size="12.5" fill="#1b1b1f">GARCH-MIDAS</text><text x="422" y="186" font-size="10.5" fill="#6a6a70">observed weather</text></g><g class="node" data-id="n3" tabindex="0" role="button" aria-label="Forecast MIDAS: SEAS5, plus regimes. Highlight its path"><rect x="412" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="261" font-size="12.5" fill="#1b1b1f">Forecast MIDAS</text><text x="422" y="278" font-size="10.5" fill="#6a6a70">SEAS5, plus regimes</text></g><g class="node" data-id="score" tabindex="0" role="button" aria-label="Scoring: QLIKE, MSE, DM test. Highlight its path"><rect x="612" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="169" font-size="12.5" fill="#1b1b1f">Scoring</text><text x="622" y="186" font-size="10.5" fill="#6a6a70">QLIKE, MSE, DM test</text></g><g class="node" data-id="hor" tabindex="0" role="button" aria-label="Skill horizon: months of advantage. Highlight its path"><rect x="812" y="148" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="169" font-size="12.5" fill="#2430bc">Skill horizon</text><text x="822" y="186" font-size="10.5" fill="#6a6a70">months of advantage</text></g></svg></div>
+            <h5 class="flow-head">How the data flows</h5>
+            <p class="flow-note">Planned structure.</p><ol class="flow"><li><b>Input.</b> GME daily day-ahead prices, ERA5 daily weather over Italy, and SEAS5 25-member monthly forecasts, aligned into one table indexed by date.</li><li><b>Features.</b> Daily log returns of price. Monthly weather-extreme indices (one value per month), computed the same way from ERA5 and from each SEAS5 member after quantile-mapping bias correction.</li><li><b>Fit.</b> Three models on the same training window: GARCH(1,1) on returns alone, GARCH-MIDAS with ERA5 extremes, and GARCH-MIDAS with forecast extremes. Each outputs a daily variance forecast.</li><li><b>Score.</b> On the test window, each forecast is compared with realised variance using QLIKE and MSE, and a Diebold–Mariano test checks whether the differences are significant.</li><li><b>Output.</b> A table of losses per model per forecast lead. The skill horizon is the lead at which the forecast model stops beating the no-weather model.</li></ol>
+          </div>
+        </div>
+      </div></div>
     </li>
-
     <li class="project" data-tag="markets">
       <button class="project-head" type="button" aria-expanded="false">
         <span class="num">007</span><span class="title">Spanish solar portfolio strategy</span>
         <span class="tag">Markets</span><span class="status">in progress</span>
       </button>
-      <div class="more"><div><div class="detail">
-        <div class="text">
-          <p>How output from solar sites across Spain moves together, combined with market
-          prices to build an allocation strategy with rebalancing rules and risk limits,
-          tested across parameter choices.</p>
-          <p class="credit"><sup>†</sup>Weather from ERA5 (Copernicus); prices from ENTSO-E.</p>
-          <p class="stack">Python · ERA5 · ENTSO-E · corrlib</p>
-          <a class="gh" href="https://github.com/KevinGrainger">View on GitHub</a>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Aim: spread solar capacity across Spain so that sites do not all generate, and depress the price, at the same time. Output is built from ERA5 weather, spatial correlation is modelled by distance and season and cleaned with random matrix theory, and five allocation rules are back-tested on revenue and worst year.</p>
+            <p class="credit"><sup>†</sup>Weather from ERA5 (Hersbach et al. 2020); prices from ENTSO-E. Capture-rate framing from Hirth (2013).</p>
+            <p class="stack">Python · ERA5 · ENTSO-E · corrlib</p>
+            <a class="gh" href="https://github.com/kevingrainger/KevinGrainger_Rep">View on GitHub</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-007">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/KevinGrainger_Rep/main/Energy%20Portfolio%20Optimisations.png" alt="Volatility of oil and renewable markets with resulting portfolio allocations" loading="lazy"><figcaption>Older figure: energy portfolio, placeholder</figcaption></figure>
         </div>
-        <figure>
-          <img src="images/energy-portfolio.png" alt="Volatility of oil and renewable markets with resulting portfolio allocations" loading="lazy">
-          <figcaption>Older figure: energy portfolio, placeholder</figcaption>
-        </figure>
-      </div></div></div>
+        <div class="ext" id="ext-007" hidden>
+          <div class="tabs" role="tablist" aria-label="Spanish solar portfolio strategy sections">
+            <button type="button" role="tab" id="t-007-method" aria-controls="p-007-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-007-results" aria-controls="p-007-results" aria-selected="false" tabindex="-1">results</button>
+            <button type="button" role="tab" id="t-007-pipeline" aria-controls="p-007-pipeline" aria-selected="false" tabindex="-1">pipeline</button>
+          </div>
+          <div class="panel" role="tabpanel" id="p-007-method" aria-labelledby="t-007-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Build generation from weather</h5><p>Turn hourly ERA5 radiation at 20–40 sites into output with a deliberately simple panel model, then remove the clear-sky profile so only the weather-driven deviations remain.</p></div><figure><div class="no-figure">[ Output and deviations at one site ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Measure how sites move together</h5><p>Correlation falls with distance between sites. The decay length L is estimated by season, since winter blocking highs are expected to make diversification fail.</p></div><figure><div class="no-figure">[ Correlation against distance, by season ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Clean and find structure</h5><p>Clean the site matrix with corrlib, count its independent modes, and compute each site&#39;s capture rate: the price it actually earns, weighted by when it generates.</p></div><figure><div class="no-figure">[ Effective rank, raw against cleaned ]</div><figcaption>planned figure</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Allocate and score</h5><p>Five allocation arms, from equal weight to a capture-rate objective, scored on revenue and worst year. Equal weight is expected to be competitive and is reported as such.</p></div><figure><div class="no-figure">[ Scoreboard and robustness surface ]</div><figcaption>planned figure</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-007-results" aria-labelledby="t-007-results" hidden>
+            <div class="results"><figure><div class="no-figure">[ Allocation arms ]</div><figcaption>planned figure</figcaption></figure><figure><div class="no-figure">[ Scoreboard: revenue and worst year ]</div><figcaption>planned figure</figcaption></figure></div>
+            <p class="note">Results are added here as each run is finished.</p>
+          </div>
+          <div class="panel" role="tabpanel" id="p-007-pipeline" aria-labelledby="t-007-pipeline" hidden>
+            <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
+            <div class="pipe"><svg class="map" viewBox="0 0 1000 306" width="100%" role="img" aria-label="Spanish Solar Portfolio: From Weather to Allocation" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah007" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#2430bc"/></marker><marker id="am007" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6a6a70"/></marker></defs><text x="12" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">DATA</text><text x="212" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">GENERATION</text><text x="412" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">CORRELATION</text><text x="612" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">STRUCTURE</text><text x="812" y="22" font-size="11" letter-spacing="1.5" fill="#6a6a70">STRATEGY</text><path class="edge" data-from="era" data-to="pv" d="M170 81.0L190.0 81.0L190.0 81.0L210 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah007)"/><path class="edge" data-from="pv" data-to="anom" d="M291.0 106L291.0 146" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah007)"/><path class="edge" data-from="anom" data-to="C" d="M370 173.0L390.0 173.0L390.0 173.0L410 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah007)"/><path class="edge" data-from="C" data-to="L" d="M491.0 148L491.0 108" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am007)"/><path class="edge" data-from="C" data-to="load" d="M570 173.0L590.0 173.0L590.0 173.0L610 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah007)"/><path class="edge" data-from="C" data-to="neff" d="M570 173.0L590.0 173.0L590.0 81.0L610 81.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah007)"/><path class="edge" data-from="px" data-to="cap" d="M170 265.0L390.0 265.0L390.0 265.0L610 265.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am007)"/><path class="edge" data-from="load" data-to="alloc" d="M770 173.0L790.0 173.0L790.0 173.0L810 173.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah007)"/><path class="edge" data-from="neff" data-to="alloc" d="M770 81.0L790.0 81.0L790.0 173.0L810 173.0" fill="none" stroke="#6a6a70" stroke-width="1" marker-end="url(#am007)"/><path class="edge" data-from="cap" data-to="score" d="M770 265.0L790.0 265.0L790.0 265.0L810 265.0" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah007)"/><path class="edge" data-from="alloc" data-to="score" d="M891.0 198L891.0 238" fill="none" stroke="#2430bc" stroke-width="1.4" marker-end="url(#ah007)"/><g class="node" data-id="era" tabindex="0" role="button" aria-label="ERA5 radiation: hourly, 20-40 sites. Highlight its path"><rect x="12" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="77" font-size="12.5" fill="#1b1b1f">ERA5 radiation</text><text x="22" y="94" font-size="10.5" fill="#6a6a70">hourly, 20-40 sites</text></g><g class="node" data-id="px" tabindex="0" role="button" aria-label="ENTSO-E prices: day-ahead, Spain. Highlight its path"><rect x="12" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5" stroke-dasharray="4 3"/><text x="22" y="261" font-size="12.5" fill="#1b1b1f">ENTSO-E prices</text><text x="22" y="278" font-size="10.5" fill="#6a6a70">day-ahead, Spain</text></g><g class="node" data-id="pv" tabindex="0" role="button" aria-label="Panel model: deliberately simple. Highlight its path"><rect x="212" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="77" font-size="12.5" fill="#1b1b1f">Panel model</text><text x="222" y="94" font-size="10.5" fill="#6a6a70">deliberately simple</text></g><g class="node" data-id="anom" tabindex="0" role="button" aria-label="Clear-sky removal: deviations only. Highlight its path"><rect x="212" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="222" y="169" font-size="12.5" fill="#1b1b1f">Clear-sky removal</text><text x="222" y="186" font-size="10.5" fill="#6a6a70">deviations only</text></g><g class="node" data-id="L" tabindex="0" role="button" aria-label="Decay length L: rho(d) by season. Highlight its path"><rect x="412" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="77" font-size="12.5" fill="#1b1b1f">Decay length L</text><text x="422" y="94" font-size="10.5" fill="#6a6a70">rho(d) by season</text></g><g class="node" data-id="C" tabindex="0" role="button" aria-label="Site matrix: cleaned with corrlib. Highlight its path"><rect x="412" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="422" y="169" font-size="12.5" fill="#1b1b1f">Site matrix</text><text x="422" y="186" font-size="10.5" fill="#6a6a70">cleaned with corrlib</text></g><g class="node" data-id="neff" tabindex="0" role="button" aria-label="Effective rank: raw vs cleaned. Highlight its path"><rect x="612" y="56" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="77" font-size="12.5" fill="#1b1b1f">Effective rank</text><text x="622" y="94" font-size="10.5" fill="#6a6a70">raw vs cleaned</text></g><g class="node" data-id="load" tabindex="0" role="button" aria-label="Site loadings: on the shared mode. Highlight its path"><rect x="612" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="169" font-size="12.5" fill="#1b1b1f">Site loadings</text><text x="622" y="186" font-size="10.5" fill="#6a6a70">on the shared mode</text></g><g class="node" data-id="cap" tabindex="0" role="button" aria-label="Capture rate: output-weighted. Highlight its path"><rect x="612" y="240" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="622" y="261" font-size="12.5" fill="#1b1b1f">Capture rate</text><text x="622" y="278" font-size="10.5" fill="#6a6a70">output-weighted</text></g><g class="node" data-id="alloc" tabindex="0" role="button" aria-label="Allocation: arms A1 to A5. Highlight its path"><rect x="812" y="148" width="158" height="50" rx="3" fill="#ffffff" stroke="#cfcdc5"/><text x="822" y="169" font-size="12.5" fill="#1b1b1f">Allocation</text><text x="822" y="186" font-size="10.5" fill="#6a6a70">arms A1 to A5</text></g><g class="node" data-id="score" tabindex="0" role="button" aria-label="Scoreboard: revenue, worst year. Highlight its path"><rect x="812" y="240" width="158" height="50" rx="3" fill="#eceefb" stroke="#2430bc"/><text x="822" y="261" font-size="12.5" fill="#2430bc">Scoreboard</text><text x="822" y="278" font-size="10.5" fill="#6a6a70">revenue, worst year</text></g></svg></div>
+            <h5 class="flow-head">How the data flows</h5>
+            <p class="flow-note">Planned structure.</p><ol class="flow"><li><b>Input.</b> Hourly ERA5 radiation and temperature at 20–40 site locations (a table of hours × sites), and hourly ENTSO-E day-ahead prices for Spain.</li><li><b>Generation.</b> A simple panel model turns each site&#39;s weather into hourly output. The clear-sky profile is subtracted, leaving only weather-driven deviations, in the same hours × sites shape.</li><li><b>Correlation.</b> Site × site correlation of the deviations, by season. Fitting ρ(d) = exp(−d / L) against distance gives the decay length L; the matrix is cleaned with corrlib.</li><li><b>Structure.</b> Effective rank of the cleaned matrix, each site&#39;s loading on the shared mode, and each site&#39;s capture rate: its output-weighted average price divided by the plain average price.</li><li><b>Output.</b> Five allocation arms, each a vector of capacity shares, back-tested over the years into one table of revenue and worst-year results.</li></ol>
+          </div>
+        </div>
+      </div></div>
     </li>
 
   </ul>
@@ -335,6 +546,82 @@
     head.addEventListener('click', () => {
       const open = p.classList.toggle('open');
       head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
+  // View more: pins the row open and reveals the tabbed write-up.
+  projects.forEach(p => {
+    const btn = p.querySelector('.view-more');
+    const ext = p.querySelector('.ext');
+    btn.addEventListener('click', () => {
+      const open = ext.hidden;
+      ext.hidden = !open;
+      p.classList.toggle('more-open', open);
+      if (!open) {
+        // View less: drop any pin too, so the row goes back to opening on hover only.
+        // It stays open while the cursor is still over it, and closes when the cursor leaves.
+        p.classList.remove('open');
+        p.querySelector('.project-head').setAttribute('aria-expanded', 'false');
+      }
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? '\u2212 view less' : '+ view more';
+    });
+
+    // Tabs: method / results / pipeline. Arrow keys move between tabs.
+    const tabs = [...p.querySelectorAll('[role="tab"]')];
+    const select = tab => {
+      tabs.forEach(t => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(t));
+      t.addEventListener('keydown', e => {
+        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        const next = tabs[(i + d + tabs.length) % tabs.length];
+        select(next); next.focus();
+      });
+    });
+  });
+
+  // Pipeline trace: highlight a box plus everything upstream and downstream of it.
+  document.querySelectorAll('svg.map').forEach(svg => {
+    const edges = [...svg.querySelectorAll('.edge')];
+    const nodes = [...svg.querySelectorAll('.node')];
+    const walk = (start, from, to) => {
+      const seen = new Set([start]), stack = [start];
+      while (stack.length) {
+        const id = stack.pop();
+        edges.forEach(e => {
+          if (e.dataset[from] === id && !seen.has(e.dataset[to])) { seen.add(e.dataset[to]); stack.push(e.dataset[to]); }
+        });
+      }
+      return seen;
+    };
+    const trace = node => {
+      const id = node.dataset.id;
+      const down = walk(id, 'from', 'to'), up = walk(id, 'to', 'from');
+      svg.classList.add('tracing');
+      nodes.forEach(n => {
+        n.classList.toggle('on', down.has(n.dataset.id) || up.has(n.dataset.id));
+        n.classList.toggle('focus', n === node);
+      });
+      edges.forEach(e => e.classList.toggle('on',
+        (down.has(e.dataset.from) && down.has(e.dataset.to)) || (up.has(e.dataset.from) && up.has(e.dataset.to))));
+    };
+    const clear = () => {
+      svg.classList.remove('tracing');
+      svg.querySelectorAll('.on, .focus').forEach(el => el.classList.remove('on', 'focus'));
+    };
+    nodes.forEach(n => {
+      n.addEventListener('mouseenter', () => trace(n));
+      n.addEventListener('focus', () => trace(n));
+      n.addEventListener('mouseleave', clear);
+      n.addEventListener('blur', clear);
     });
   });
 </script>
