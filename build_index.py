@@ -101,25 +101,50 @@ PROJECTS = [
                 ("Count independent sites", "Effective number of sites, raw and cleaned, by season.", "figures/fig4_effective_sites.png")],
          results=[("figures/hero.png", "The reach of the weather"), ("figures/fig2_correlation_vs_distance.png", "Correlation against distance"),
                   ("figures/fig4_effective_sites.png", "Effective sites by season"), ("figures/fig3_monthly_reach.png", "Month by month")]),
+    #-------- undergraduate work, presented the same way --------------------------------
+    dict(num="008", tag="physics", tag_label="Physics", status="undergrad",
+         folder="earlier-work/pde-solvers-cpp", title="PDEs by successive over-relaxation",
+         summary=["Laplace's equation on a square holding a charged box and a grounded wire, solved in C++ by successive over-relaxation, then ported to Python with Numba to map how the cost depends on the relaxation factor and the grid size.",
+                  "The same machinery prices options: Black-Scholes by Crank-Nicolson with SOR, and American puts by projected SOR, which traces the early-exercise boundary for free. It matches the closed form to within 0.003. Also here: a numerical study of the Schrödinger equation."],
+         stack="C++ · Python · Numba · finite differences · SOR",
+         hero=("figures/cover.png", "Laplace's equation solved by SOR: surface and contours"),
+         steps=[("Solve Laplace's equation", "Over-relaxed Gauss-Seidel sweeps on a 253 x 253 grid: 760 sweeps at the optimal factor, against 4,047 at 1.8.", "figures/fig1_laplace_surface.png"),
+                ("Map the cost", "Sweeps to converge across relaxation factor and grid size; the best factor climbs towards 2 as the grid refines.", "figures/fig2_sor_parameter_surface.png"),
+                ("Price an option", "Black-Scholes stepped back from expiry by Crank-Nicolson; projected SOR for the American put.", "figures/fig3_black_scholes_surfaces.png"),
+                ("Check it", "Against the closed-form price, and the early-exercise boundary through time.", "figures/fig4_black_scholes_check.png")],
+         results=[("figures/fig2_sor_parameter_surface.png", "SOR cost surface"), ("figures/fig3_black_scholes_surfaces.png", "Black-Scholes surfaces"),
+                  ("figures/fig4_black_scholes_check.png", "Validation and exercise boundary"), ("figures/original_pde_surfaces.png", "The original C++ surfaces")]),
+    dict(num="009", tag="physics", tag_label="Physics", status="undergrad",
+         folder="earlier-work/potts-monte-carlo-cpp", title="The Potts model by Monte Carlo",
+         summary=["A grid where every site holds one of three states and prefers to match its neighbours, sampled by Metropolis Monte Carlo in C++. Hot, it is noise; cold, one state takes over; at the critical point, domains of every size appear at once.",
+                  "Fluctuations peak at β ≈ 1.04, close to the exact critical point ln(1 + √3) ≈ 1.005 for a 24 x 24 lattice. The same model, scaled up, became the coral reef project."],
+         stack="C++ · Python · Numba · Metropolis Monte Carlo · statistical physics",
+         hero=("figures/cover.png", "The lattice hot, at the critical point, and cold"),
+         steps=[("Simulate the lattice", "Single-site Metropolis updates; snapshots from a 256 x 256 Numba port.", "figures/fig1_lattice.png"),
+                ("Watch order appear", "Magnetisation jumps from about 0.1 to 0.9 over a narrow range of temperature.", "figures/fig2_magnetisation.png"),
+                ("Find the transition", "Fluctuations peak at the critical point.", "figures/fig3_fluctuations.png")],
+         results=[("figures/fig1_lattice.png", "Cooling through the transition"), ("figures/fig2_magnetisation.png", "Magnetisation"),
+                  ("figures/fig3_fluctuations.png", "Fluctuations"), ("figures/original_potts_results.png", "The original C++ results")]),
+    dict(num="010", tag="physics", tag_label="Physics", status="undergrad",
+         folder="earlier-work/higher-order-odes-cpp", title="Higher-order ODEs and the shooting method",
+         summary=["A hand-written fourth-order Runge-Kutta integrator in C++, checked against an exact solution, extended to a fourth-order equation by rewriting it as four first-order ones.",
+                  "The error falls as the fourth power of the step (fitted slope 3.95). The shooting method turns a boundary-value problem into a target practice: guess the starting slope, integrate, bisect on the miss - 25 shots to hit x(10) = -1."],
+         stack="C++ · Python · Runge-Kutta · shooting method · bisection",
+         hero=("figures/cover.png", "The shooting method closing in on a boundary condition"),
+         steps=[("Step it forward", "RK4 against the exact solution of dx/dt = (t - 2)²(x + 1).", "figures/fig1_rk4_vs_exact.png"),
+                ("Measure the order", "Halve the step, cut the error sixteen-fold.", "figures/fig2_convergence.png"),
+                ("Go higher order", "A fourth-order equation as four coupled first-order ones.", "figures/fig3_fourth_order.png"),
+                ("Shoot", "Bisect on the starting slope until the far boundary is hit.", "figures/fig4_shooting.png")],
+         results=[("figures/fig4_shooting.png", "Shooting method"), ("figures/fig2_convergence.png", "Fourth-order convergence"),
+                  ("figures/fig1_rk4_vs_exact.png", "RK4 against the exact answer"), ("figures/fig3_fourth_order.png", "A fourth-order ODE")]),
 ]
 
 
 EXTRA_CSS = '\n  <style>\n    /* covers and figures: full width, uncropped, high resolution */\n    .wrap { max-width: 1120px; }\n    .detail { flex-direction: column; gap: 1.25rem; }\n    .detail > figure { flex: none; width: 100%; }\n    figure img { aspect-ratio: auto; object-fit: contain; background: #fff; }\n    .detail > figure img { border: 1px solid var(--rule); }\n    .results { grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr)); gap: 2rem; }\n    .step { grid-template-columns: minmax(0, 1fr) 460px; }\n    @media (max-width: 900px) { .step { grid-template-columns: 1fr; } .results { grid-template-columns: 1fr; } }\n  </style>\n</head>'
 
 
-# Earlier (college) work: a compact list under the projects, some without a picture
-EARLIER = [
-    dict(folder="earlier-work/pde-solvers-cpp", title="PDEs by successive over-relaxation",
-         text="Laplace's equation in C++ with SOR, the cost surface over the relaxation factor, a Schrödinger study, and a new Black-Scholes solver (Crank-Nicolson + projected SOR, Numba).",
-         stack="C++ · Python · Numba", img="figures/cover.png"),
-    dict(folder="earlier-work/potts-monte-carlo-cpp", title="The Potts model by Monte Carlo",
-         text="Metropolis Monte Carlo for the 3-state Potts model; fluctuations peak near the exact critical point. The seed of the coral reef project.",
-         stack="C++", img="figures/fig1_transition.png"),
-    dict(folder="earlier-work/higher-order-odes-cpp", title="Higher-order ODEs",
-         text="Fourth-order Runge-Kutta and the shooting method; the error falls as h^4, as it should.",
-         stack="C++", img=None),
-]
-
+# Style block from an older build that listed earlier work separately; kept only so
+# re-running on that page strips it out
 EARLIER_CSS = """
   <style>
     .earlier { margin: 3rem 0 2rem; border-top: 1px solid var(--rule); padding-top: 1.25rem; }
@@ -136,18 +161,6 @@ EARLIER_CSS = """
 </head>"""
 
 
-def earlier_html(base, publish):
-    rows = []
-    for e in EARLIER:
-        link = (base.replace("raw.githubusercontent.com", "github.com").replace("/main/", "/tree/main/") + e["folder"]) if publish \
-            else f"{base}{e['folder']}/README.md"
-        img = (f'<a href="{html.escape(link)}"><img src="{html.escape(base + e["folder"] + "/" + e["img"])}" '
-               f'alt="{html.escape(e["title"])}" loading="lazy"></a>') if e["img"] else ""
-        rows.append(f'      <li{"" if img else " class=\"noimg\""}><div><h3><a href="{html.escape(link)}">{html.escape(e["title"])}</a></h3>'
-                    f'<p>{html.escape(e["text"])}</p><p class="stack">{html.escape(e["stack"])}</p></div>{img}</li>')
-    return ('\n  <section class="earlier">\n    <h2>Earlier work</h2>\n    <ul>\n' + "\n".join(rows) +
-            '\n    </ul>\n  </section>\n')
-
 
 # Credit lines rewritten to match what each project now actually does
 CREDITS = {
@@ -156,6 +169,9 @@ CREDITS = {
     '003': '<p class="credit"><sup>&dagger;</sup>Builds on Epps (1979), Laloux, Cizeau, Bouchaud &amp; Potters (1999), Ledoit &amp; Wolf (2004, 2020) and Capon (1969). Prices from Yahoo Finance via yfinance.</p>',
     '004': '<p class="credit"><sup>&dagger;</sup>STA/LTA from Allen (1978); optimal array weights from Capon (1969). Labelled waveforms from <a href="https://doi.org/10.1029/2017JB015251">Ross, Meier &amp; Hauksson (2018)</a>, Southern California Seismic Network data via the <a href="https://doi.org/10.7909/C3WD3xH1">SCEDC</a>.</p>',
     '005': '<p class="credit"><sup>&dagger;</sup>Control variate from Kemna &amp; Vorst (1990). Projected SOR as in Wilmott, Howison &amp; Dewynne (1995). Prices from Yahoo Finance via yfinance; SET50 history from Investing.com.</p>',
+    '008': '<p class="credit"><sup>&dagger;</sup>Projected SOR as in Wilmott, Howison &amp; Dewynne (1995).</p>',
+    '009': '<p class="credit"><sup>&dagger;</sup>Exact critical point from Baxter (1973); Metropolis et al. (1953).</p>',
+    '010': '',
     '006': '<p class="credit"><sup>&dagger;</sup>Builds on Guerzoni, Riso &amp; Zoia (2026). GARCH-MIDAS from Engle, Ghysels &amp; Sohn (2013).</p>',
     '007': '<p class="credit"><sup>&dagger;</sup>Weather from ERA5 (<a href="https://doi.org/10.1002/qj.3803">Hersbach et al. 2020</a>), built with ECMWF\'s anemoi-datasets. Contains modified Copernicus Climate Change Service information (2023). Capture-rate framing from Hirth (2013).</p>',
 }
@@ -238,9 +254,9 @@ def main():
     items = []
     for p in PROJECTS:
         n = p["num"]
-        block_start = old_list.index(f'<span class="num">{n}</span>')
+        block_start = old_list.find(f'<span class="num">{n}</span>')
         next_item = old_list.find('<li class="project"', block_start)
-        block = old_list[block_start:next_item if next_item > 0 else len(old_list)]
+        block = "" if block_start < 0 else old_list[block_start:next_item if next_item > 0 else len(old_list)]
         credit = re.search(r'<p class="credit">.*?</p>', block, re.S)
         credit = CREDITS.get(n, credit.group(0) if credit else "")
         pipe_start = block.find(f'<div class="panel" role="tabpanel" id="p-{n}-pipeline"')
@@ -253,8 +269,14 @@ def main():
         items.append(project_html(p, base, credit, pipeline_panel, repo_link))
 
     after = end + len("</ul>")
-    new_page = page[:start] + "\n" + "\n".join(items) + "\n  </ul>" + earlier_html(base, publish) + page[after:]
-    new_page = new_page.replace("</head>", EXTRA_CSS, 1).replace("</head>", EARLIER_CSS, 1)
+    new_page = page[:start] + "\n" + "\n".join(items) + "\n  </ul>" + page[after:]
+    new_page = new_page.replace("</head>", EXTRA_CSS, 1)
+    #filter button for the undergraduate physics projects, and the right count before the script runs
+    physics_btn = '\n    <button type="button" data-filter="physics" aria-pressed="false">physics</button>'
+    if 'data-filter="physics"' not in new_page:
+        markets_btn = '<button type="button" data-filter="markets" aria-pressed="false">markets</button>'
+        new_page = new_page.replace(markets_btn, markets_btn + physics_btn, 1)
+    new_page = re.sub(r'<span id="count">\d+ / \d+</span>', f'<span id="count">{len(PROJECTS)} / {len(PROJECTS)}</span>', new_page)
     for old, new in PIPELINE_FIXES:
         new_page = new_page.replace(old, new)
     new_page = new_page.replace(" All are side projects, built for fun.", "")

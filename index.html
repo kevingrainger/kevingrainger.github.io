@@ -191,19 +191,6 @@
     .step { grid-template-columns: minmax(0, 1fr) 460px; }
     @media (max-width: 900px) { .step { grid-template-columns: 1fr; } .results { grid-template-columns: 1fr; } }
   </style>
-
-  <style>
-    .earlier { margin: 3rem 0 2rem; border-top: 1px solid var(--rule); padding-top: 1.25rem; }
-    .earlier h2 { font-size: 1rem; letter-spacing: .04em; text-transform: uppercase; margin: 0 0 1rem; }
-    .earlier ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.25rem; }
-    .earlier li { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 1.25rem; align-items: start; }
-    .earlier li.noimg { grid-template-columns: 1fr; }
-    .earlier h3 { font-size: 1rem; margin: 0 0 .3rem; }
-    .earlier p { margin: 0 0 .3rem; font-size: .92rem; }
-    .earlier .stack { opacity: .7; font-size: .85rem; }
-    .earlier img { width: 100%; height: auto; border: 1px solid var(--rule); background: #fff; }
-    @media (max-width: 700px) { .earlier li { grid-template-columns: 1fr; } }
-  </style>
 </head>
 <body>
 <main class="wrap">
@@ -222,7 +209,7 @@
 
   <div class="section-head">
     <h2>Projects</h2>
-    <span id="count">7 / 7</span>
+    <span id="count">10 / 10</span>
   </div>
 
   <div class="filter" role="group" aria-label="Filter projects">
@@ -230,6 +217,7 @@
     <button type="button" data-filter="earth" aria-pressed="false">earth</button>
     <button type="button" data-filter="signals" aria-pressed="false">signals</button>
     <button type="button" data-filter="markets" aria-pressed="false">markets</button>
+    <button type="button" data-filter="physics" aria-pressed="false">physics</button>
   </div>
 
   <ul class="projects">
@@ -534,16 +522,120 @@
         </div>
       </div></div>
     </li>
+    <li class="project" data-tag="physics">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">008</span><span class="title">PDEs by successive over-relaxation</span>
+        <span class="tag">Physics</span><span class="status">undergrad</span>
+      </button>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Laplace&#x27;s equation on a square holding a charged box and a grounded wire, solved in C++ by successive over-relaxation, then ported to Python with Numba to map how the cost depends on the relaxation factor and the grid size.</p>
+            <p>The same machinery prices options: Black-Scholes by Crank-Nicolson with SOR, and American puts by projected SOR, which traces the early-exercise boundary for free. It matches the closed form to within 0.003. Also here: a numerical study of the Schrödinger equation.</p>
+            <p class="credit"><sup>&dagger;</sup>Projected SOR as in Wilmott, Howison &amp; Dewynne (1995).</p>
+            <p class="stack">C++ · Python · Numba · finite differences · SOR</p>
+            <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/pde-solvers-cpp">Read the write-up and code</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-008">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/cover.png" alt="Laplace&#x27;s equation solved by SOR: surface and contours"><figcaption>Laplace&#x27;s equation solved by SOR: surface and contours</figcaption></figure>
+        </div>
+        <div class="ext" id="ext-008" hidden>
+          <div class="tabs" role="tablist" aria-label="PDEs by successive over-relaxation sections">
+            <button type="button" role="tab" id="t-008-method" aria-controls="p-008-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-008-results" aria-controls="p-008-results" aria-selected="false" tabindex="-1">results</button>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="p-008-method" aria-labelledby="t-008-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Solve Laplace&#x27;s equation</h5><p>Over-relaxed Gauss-Seidel sweeps on a 253 x 253 grid: 760 sweeps at the optimal factor, against 4,047 at 1.8.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/fig1_laplace_surface.png" alt="Solve Laplace&#x27;s equation" loading="lazy"><figcaption>Solve Laplace&#x27;s equation</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Map the cost</h5><p>Sweeps to converge across relaxation factor and grid size; the best factor climbs towards 2 as the grid refines.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/fig2_sor_parameter_surface.png" alt="Map the cost" loading="lazy"><figcaption>Map the cost</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Price an option</h5><p>Black-Scholes stepped back from expiry by Crank-Nicolson; projected SOR for the American put.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/fig3_black_scholes_surfaces.png" alt="Price an option" loading="lazy"><figcaption>Price an option</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Check it</h5><p>Against the closed-form price, and the early-exercise boundary through time.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/fig4_black_scholes_check.png" alt="Check it" loading="lazy"><figcaption>Check it</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-008-results" aria-labelledby="t-008-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/fig2_sor_parameter_surface.png" alt="SOR cost surface" loading="lazy"><figcaption>SOR cost surface</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/fig3_black_scholes_surfaces.png" alt="Black-Scholes surfaces" loading="lazy"><figcaption>Black-Scholes surfaces</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/fig4_black_scholes_check.png" alt="Validation and exercise boundary" loading="lazy"><figcaption>Validation and exercise boundary</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/original_pde_surfaces.png" alt="The original C++ surfaces" loading="lazy"><figcaption>The original C++ surfaces</figcaption></figure></div>
+          </div>
+          
+        </div>
+      </div></div>
+    </li>
+    <li class="project" data-tag="physics">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">009</span><span class="title">The Potts model by Monte Carlo</span>
+        <span class="tag">Physics</span><span class="status">undergrad</span>
+      </button>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>A grid where every site holds one of three states and prefers to match its neighbours, sampled by Metropolis Monte Carlo in C++. Hot, it is noise; cold, one state takes over; at the critical point, domains of every size appear at once.</p>
+            <p>Fluctuations peak at β ≈ 1.04, close to the exact critical point ln(1 + √3) ≈ 1.005 for a 24 x 24 lattice. The same model, scaled up, became the coral reef project.</p>
+            <p class="credit"><sup>&dagger;</sup>Exact critical point from Baxter (1973); Metropolis et al. (1953).</p>
+            <p class="stack">C++ · Python · Numba · Metropolis Monte Carlo · statistical physics</p>
+            <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/potts-monte-carlo-cpp">Read the write-up and code</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-009">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/cover.png" alt="The lattice hot, at the critical point, and cold"><figcaption>The lattice hot, at the critical point, and cold</figcaption></figure>
+        </div>
+        <div class="ext" id="ext-009" hidden>
+          <div class="tabs" role="tablist" aria-label="The Potts model by Monte Carlo sections">
+            <button type="button" role="tab" id="t-009-method" aria-controls="p-009-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-009-results" aria-controls="p-009-results" aria-selected="false" tabindex="-1">results</button>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="p-009-method" aria-labelledby="t-009-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Simulate the lattice</h5><p>Single-site Metropolis updates; snapshots from a 256 x 256 Numba port.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/fig1_lattice.png" alt="Simulate the lattice" loading="lazy"><figcaption>Simulate the lattice</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Watch order appear</h5><p>Magnetisation jumps from about 0.1 to 0.9 over a narrow range of temperature.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/fig2_magnetisation.png" alt="Watch order appear" loading="lazy"><figcaption>Watch order appear</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Find the transition</h5><p>Fluctuations peak at the critical point.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/fig3_fluctuations.png" alt="Find the transition" loading="lazy"><figcaption>Find the transition</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-009-results" aria-labelledby="t-009-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/fig1_lattice.png" alt="Cooling through the transition" loading="lazy"><figcaption>Cooling through the transition</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/fig2_magnetisation.png" alt="Magnetisation" loading="lazy"><figcaption>Magnetisation</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/fig3_fluctuations.png" alt="Fluctuations" loading="lazy"><figcaption>Fluctuations</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/original_potts_results.png" alt="The original C++ results" loading="lazy"><figcaption>The original C++ results</figcaption></figure></div>
+          </div>
+          
+        </div>
+      </div></div>
+    </li>
+    <li class="project" data-tag="physics">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">010</span><span class="title">Higher-order ODEs and the shooting method</span>
+        <span class="tag">Physics</span><span class="status">undergrad</span>
+      </button>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>A hand-written fourth-order Runge-Kutta integrator in C++, checked against an exact solution, extended to a fourth-order equation by rewriting it as four first-order ones.</p>
+            <p>The error falls as the fourth power of the step (fitted slope 3.95). The shooting method turns a boundary-value problem into a target practice: guess the starting slope, integrate, bisect on the miss - 25 shots to hit x(10) = -1.</p>
+            
+            <p class="stack">C++ · Python · Runge-Kutta · shooting method · bisection</p>
+            <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/higher-order-odes-cpp">Read the write-up and code</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-010">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/cover.png" alt="The shooting method closing in on a boundary condition"><figcaption>The shooting method closing in on a boundary condition</figcaption></figure>
+        </div>
+        <div class="ext" id="ext-010" hidden>
+          <div class="tabs" role="tablist" aria-label="Higher-order ODEs and the shooting method sections">
+            <button type="button" role="tab" id="t-010-method" aria-controls="p-010-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-010-results" aria-controls="p-010-results" aria-selected="false" tabindex="-1">results</button>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="p-010-method" aria-labelledby="t-010-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Step it forward</h5><p>RK4 against the exact solution of dx/dt = (t - 2)²(x + 1).</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/fig1_rk4_vs_exact.png" alt="Step it forward" loading="lazy"><figcaption>Step it forward</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Measure the order</h5><p>Halve the step, cut the error sixteen-fold.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/fig2_convergence.png" alt="Measure the order" loading="lazy"><figcaption>Measure the order</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Go higher order</h5><p>A fourth-order equation as four coupled first-order ones.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/fig3_fourth_order.png" alt="Go higher order" loading="lazy"><figcaption>Go higher order</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Shoot</h5><p>Bisect on the starting slope until the far boundary is hit.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/fig4_shooting.png" alt="Shoot" loading="lazy"><figcaption>Shoot</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-010-results" aria-labelledby="t-010-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/fig4_shooting.png" alt="Shooting method" loading="lazy"><figcaption>Shooting method</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/fig2_convergence.png" alt="Fourth-order convergence" loading="lazy"><figcaption>Fourth-order convergence</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/fig1_rk4_vs_exact.png" alt="RK4 against the exact answer" loading="lazy"><figcaption>RK4 against the exact answer</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/higher-order-odes-cpp/figures/fig3_fourth_order.png" alt="A fourth-order ODE" loading="lazy"><figcaption>A fourth-order ODE</figcaption></figure></div>
+          </div>
+          
+        </div>
+      </div></div>
+    </li>
   </ul>
-  <section class="earlier">
-    <h2>Earlier work</h2>
-    <ul>
-      <li><div><h3><a href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/pde-solvers-cpp">PDEs by successive over-relaxation</a></h3><p>Laplace&#x27;s equation in C++ with SOR, the cost surface over the relaxation factor, a Schrödinger study, and a new Black-Scholes solver (Crank-Nicolson + projected SOR, Numba).</p><p class="stack">C++ · Python · Numba</p></div><a href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/pde-solvers-cpp"><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/pde-solvers-cpp/figures/cover.png" alt="PDEs by successive over-relaxation" loading="lazy"></a></li>
-      <li><div><h3><a href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/potts-monte-carlo-cpp">The Potts model by Monte Carlo</a></h3><p>Metropolis Monte Carlo for the 3-state Potts model; fluctuations peak near the exact critical point. The seed of the coral reef project.</p><p class="stack">C++</p></div><a href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/potts-monte-carlo-cpp"><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/potts-monte-carlo-cpp/figures/fig1_transition.png" alt="The Potts model by Monte Carlo" loading="lazy"></a></li>
-      <li class="noimg"><div><h3><a href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/higher-order-odes-cpp">Higher-order ODEs</a></h3><p>Fourth-order Runge-Kutta and the shooting method; the error falls as h^4, as it should.</p><p class="stack">C++</p></div></li>
-    </ul>
-  </section>
-
 
   <footer>
     <p>Source on <a href="https://github.com/KevinGrainger">GitHub</a>.</p>
