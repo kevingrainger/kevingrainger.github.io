@@ -43,7 +43,7 @@ PROJECTS = [
                 ("Find the threshold", "A visit lasts about 18 days; outbreaks die out below roughly 16-29% infection per visit and take the grove above it.", "figures/fig3_threshold.png"),
                 ("Test felling", "Radius x detection speed on a 1,156-tree grove: felling removes trees faster than it stops the disease.", "figures/fig6_felling_grid.png")],
          results=[("figures/fig0_animation.gif", "Three years in twenty seconds"), ("figures/fig3_threshold.png", "All-or-nothing threshold"),
-                  ("figures/fig6_felling_grid.png", "Felling grid"), ("figures/fig7_vector_control.png", "Felling vs vector control")]),
+                  ("figures/fig6_felling_grid.png", "Felling grid"), ("figures/fig7_vector_control.png", "Felling vs vector control"), ("figures/fig_spacing_threshold.png", "Planting further apart")]),
     dict(num="003", tag="earth", tag_label="Earth systems", status="pipeline built",
          folder="003-po-valley-downscaling", title="Po Valley temperature at 1 km, physics-anchored",
          summary=["What is the temperature between the weather stations? Daily maximum temperature on a 1 km grid: between stations the surface obeys a reduced heat-budget equation in which each land-cover class couples the air to the ground at its own rate; at stations it equals the reading exactly. XGBoost learns the heating the equation lacks and hands it back as a prior; a physics-informed U-Net, trained on stations with the heat budget in its loss, is the best model on heatwave days.",
