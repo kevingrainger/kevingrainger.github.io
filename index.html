@@ -210,7 +210,7 @@
 
   <div class="section-head">
     <h2>Projects</h2>
-    <span id="count">12 / 12</span>
+    <span id="count">16 / 16</span>
   </div>
 
   <div class="filter" role="group" aria-label="Filter projects">
@@ -610,6 +610,157 @@
             <h5 class="flow-head">How the data flows</h5>
             <p class="flow-note">Theory first, each result checked by simulation on networks of 10,000 nodes; the two case studies reuse the same threshold.</p><ol class="flow"><li><b>Theory.</b> May&#x27;s bound from the eigenvalues of a random community matrix; percolation thresholds from generating functions; the correlated threshold from the matrix (k&#x27;-1)P(k&#x27;|k).</li><li><b>Network.</b> 4,000 firms at real Rhine-basin centres, suppliers chosen by sector and distance; and a credit pool on a Poisson network.</li><li><b>Calibrate.</b> Transmissibility by bisection so a low-water month costs 1% of German output; the credit model matched to a Vasicek mean loss.</li><li><b>Output.</b> The line of economies consistent with 2018 and their distance to the threshold; expected loss by tranche.</li></ol>
           </div>
+        </div>
+      </div></div>
+    </li>
+    <li class="project" data-tag="markets">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">013</span><span class="title">Coffee, frost and the forward curve</span>
+        <span class="tag">Markets</span><span class="status">complete</span>
+      </button>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>In July 2021 frost hit Brazil&#x27;s coffee belt and arabica rose by a third in a week. When a forecast warns of frost, does the price move with the warning or with the damage, and how far along the forward curve does it reach? A production-weighted frost index is built from ERA5 and from archived ECMWF and GFS forecasts, by lead time.</p>
+            <p>The market read the forecasts promptly: across 2021-2026 no reaction comes a day or two late, as Roll found for orange juice. But the largest move followed the frost night, once the damage was known. A Schwartz two-factor model fitted to the 2024-2026 curves puts the half-life of a convenience-yield shock at about three years.</p>
+            <p class="credit"><sup>&dagger;</sup>Builds on Roll (1984) and Schwartz (1997). Forecasts from ECMWF IFS and NOAA GFS via the Open-Meteo archive; ERA5 (<a href="https://doi.org/10.1002/qj.3803">Hersbach et al. 2020</a>). Prices from Yahoo Finance.</p>
+            <p class="stack">Python · Kalman filter · Schwartz two-factor model · event study · Newey-West · ECMWF and GFS forecast archive</p>
+            <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/013-coffee-forward-curves">Read the write-up and code</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-013">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig1_frost_2021.png" alt="July 2021: frost warnings in the forecasts, frost nights in ERA5, and the price of arabica"><figcaption>July 2021: frost warnings in the forecasts, frost nights in ERA5, and the price of arabica</figcaption></figure>
+        </div>
+        <div class="ext" id="ext-013" hidden>
+          <div class="tabs" role="tablist" aria-label="Coffee, frost and the forward curve sections">
+            <button type="button" role="tab" id="t-013-method" aria-controls="p-013-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-013-results" aria-controls="p-013-results" aria-selected="false" tabindex="-1">results</button>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="p-013-method" aria-labelledby="t-013-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>A frost index</h5><p>Production-weighted cold below 5 C at eight regions, from ERA5 and from forecasts issued 1-7 days ahead.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig1_frost_2021.png" alt="A frost index" loading="lazy"><figcaption>A frost index</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Line up the events</h5><p>Price paths around every frost night since 2000 and every first warning since 2021.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig2_events.png" alt="Line up the events" loading="lazy"><figcaption>Line up the events</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Read the curve</h5><p>Schwartz&#x27;s model by Kalman filter: how far a convenience-yield shock reaches, and its path since 2024.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig3_curve.png" alt="Read the curve" loading="lazy"><figcaption>Read the curve</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-013-results" aria-labelledby="t-013-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig1_frost_2021.png" alt="July 2021" loading="lazy"><figcaption>July 2021</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig2_events.png" alt="Event study" loading="lazy"><figcaption>Event study</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig3_curve.png" alt="The forward curve" loading="lazy"><figcaption>The forward curve</figcaption></figure></div>
+          </div>
+          
+        </div>
+      </div></div>
+    </li>
+    <li class="project" data-tag="markets">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">014</span><span class="title">Copper seen from space</span>
+        <span class="tag">Markets</span><span class="status">in progress</span>
+      </button>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Copper&#x27;s supply chain is short and visible: concentrate leaves a handful of Chilean and Peruvian ports, and smelters glow in shortwave infrared. Ship traffic comes from IMF PortWatch (AIS), and furnaces are located with a Sentinel-2 hot-spot test. Placebo ports that ship forestry, salmon and fishmeal are a check.</p>
+            <p>The ships see copper: Peru&#x27;s copper ports track official copper exports (r = 0.67, against 0.27 for the placebos), and Grasberg&#x27;s port went quiet after the September 2025 mudslide (-89%). But the signal does not predict the copper price a month ahead out of sample. Smelter heat over time runs next on Google Earth Engine.</p>
+            <p class="credit"><sup>&dagger;</sup>Ship data from <a href="https://portwatch.imf.org">IMF PortWatch</a> (Arslanalp, Koepke &amp; Verschuur 2021); official exports from the Banco Central de Reserva del Per&uacute;. Hot-spot test after Murphy et al. (2016). Contains modified Copernicus Sentinel-2 data, via Microsoft Planetary Computer.</p>
+            <p class="stack">Python · IMF PortWatch (AIS) · Sentinel-2 · Earth Engine · rasterio · out-of-sample testing</p>
+            <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/014-copper-satellite-signals">Read the write-up and code</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-014">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/014-copper-satellite-signals/figures/fig3_smelters.png" alt="Four copper smelters in Sentinel-2 shortwave infrared, hot pixels outlined"><figcaption>Four copper smelters in Sentinel-2 shortwave infrared, hot pixels outlined</figcaption></figure>
+        </div>
+        <div class="ext" id="ext-014" hidden>
+          <div class="tabs" role="tablist" aria-label="Copper seen from space sections">
+            <button type="button" role="tab" id="t-014-method" aria-controls="p-014-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-014-results" aria-controls="p-014-results" aria-selected="false" tabindex="-1">results</button>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="p-014-method" aria-labelledby="t-014-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Watch the ports</h5><p>Daily dry-bulk exports at 11 copper ports, Grasberg&#x27;s port and 7 placebos.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/014-copper-satellite-signals/figures/fig1_validation.png" alt="Watch the ports" loading="lazy"><figcaption>Watch the ports</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Check against truth</h5><p>Peru&#x27;s central bank publishes monthly copper export volumes; the copper ports follow them, the placebos do not.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/014-copper-satellite-signals/figures/fig1_validation.png" alt="Check against truth" loading="lazy"><figcaption>Check against truth</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>A real shock</h5><p>Amamapare before and after the Grasberg mudslide.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/014-copper-satellite-signals/figures/fig2_grasberg.png" alt="A real shock" loading="lazy"><figcaption>A real shock</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Find the furnaces</h5><p>A shortwave-infrared hot-spot test locates 24 of 30 smelters; a closed plant kept as a check shows its limits.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/014-copper-satellite-signals/figures/fig3_smelters.png" alt="Find the furnaces" loading="lazy"><figcaption>Find the furnaces</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-014-results" aria-labelledby="t-014-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/014-copper-satellite-signals/figures/fig1_validation.png" alt="Ships against official exports" loading="lazy"><figcaption>Ships against official exports</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/014-copper-satellite-signals/figures/fig2_grasberg.png" alt="Grasberg, September 2025" loading="lazy"><figcaption>Grasberg, September 2025</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/014-copper-satellite-signals/figures/fig3_smelters.png" alt="Smelters in shortwave infrared" loading="lazy"><figcaption>Smelters in shortwave infrared</figcaption></figure></div>
+          </div>
+          
+        </div>
+      </div></div>
+    </li>
+    <li class="project" data-tag="markets">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">015</span><span class="title">Hedging commodity options through a shock</span>
+        <span class="tag">Markets</span><span class="status">complete</span>
+      </button>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Sell a 3-month option on copper, gold, wheat, corn, coffee or cocoa futures every month since 2002 and hedge it eight ways: static, weekly, on 2% moves, daily, daily with GARCH volatility, Leland&#x27;s cost adjustment and the Whalley-Wilmott band.</p>
+            <p>In calm markets daily hedging tracks best and the band comes within a point at three-quarters of the cost. In a shock every dynamic hedge lands within two points of the others: the loss is set by the volatility the option was sold at, error/premium ≈ -½ × variance surprise, and simulations pin the damage on wandering volatility rather than jumps.</p>
+            <p class="credit"><sup>&dagger;</sup>Builds on Black (1976), Leland (1985), Whalley &amp; Wilmott (1997), Hull &amp; White (2017), Merton (1976), Heston (1993) and Bollerslev (1986). Prices from Yahoo Finance.</p>
+            <p class="stack">Python · Black-76 · GARCH · Whalley-Wilmott · Leland · Merton and Heston Monte Carlo</p>
+            <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/015-commodity-option-hedging">Read the write-up and code</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-015">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig2_copper_2025.png" alt="A copper call sold on 1 July 2025, hedged four ways through the tariff jump and the exemption crash"><figcaption>A copper call sold on 1 July 2025, hedged four ways through the tariff jump and the exemption crash</figcaption></figure>
+        </div>
+        <div class="ext" id="ext-015" hidden>
+          <div class="tabs" role="tablist" aria-label="Hedging commodity options through a shock sections">
+            <button type="button" role="tab" id="t-015-method" aria-controls="p-015-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-015-results" aria-controls="p-015-results" aria-selected="false" tabindex="-1">results</button>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="p-015-method" aria-labelledby="t-015-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Sell and hedge</h5><p>1,738 three-month trades across six commodities, eight strategies, 5 bp trading cost.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig2_copper_2025.png" alt="Sell and hedge" loading="lazy"><figcaption>Sell and hedge</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Calm against shock</h5><p>Tracking error against trading cost, split by whether volatility surprised.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig1_frontier.png" alt="Calm against shock" loading="lazy"><figcaption>Calm against shock</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Why shocks hurt</h5><p>Every trade&#x27;s error against its variance surprise, beside the one-line theory.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig3_variance_surprise.png" alt="Why shocks hurt" loading="lazy"><figcaption>Why shocks hurt</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>What breaks which hedge</h5><p>The same trades in four simulated markets: constant volatility, jumps, wandering volatility, a scheduled jump.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig4_monte_carlo.png" alt="What breaks which hedge" loading="lazy"><figcaption>What breaks which hedge</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-015-results" aria-labelledby="t-015-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig1_frontier.png" alt="Error against cost" loading="lazy"><figcaption>Error against cost</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig3_variance_surprise.png" alt="The variance surprise" loading="lazy"><figcaption>The variance surprise</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig4_monte_carlo.png" alt="Simulated markets" loading="lazy"><figcaption>Simulated markets</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/015-commodity-option-hedging/figures/fig2_copper_2025.png" alt="Copper, summer 2025" loading="lazy"><figcaption>Copper, summer 2025</figcaption></figure></div>
+          </div>
+          
+        </div>
+      </div></div>
+    </li>
+    <li class="project" data-tag="earth">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">016</span><span class="title">Desertification in the Sahel</span>
+        <span class="tag">Earth systems</span><span class="status">in progress</span>
+      </button>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>Plants that help plants: the Kéfi lattice, in which bare soil recovers faster next to vegetation, the same neighbour coupling as the coral reef&#x27;s Potts model. With strong facilitation the way back from desert is longer than the way down, and the mean-field theory overstates the trap.</p>
+            <p>The vegetation stops connecting long before it disappears: the largest patch falls from 90% of all vegetation to 6% while cover is still near a half, well before the collapse. A satellite counting patch sizes would see the warning. Next: real rainfall at Gourma and Fakara against MODIS greenness.</p>
+            <p class="credit"><sup>&dagger;</sup>Builds on K&eacute;fi et al. (2007), Rietkerk et al. (2004) and Scanlon et al. (2007). Sites after Dardel et al. (2014). Contains modified Copernicus Sentinel-2 data; MODIS NDVI via the ORNL DAAC; ERA5 rainfall via Open-Meteo.</p>
+            <p class="stack">Python · Numba cellular automaton · pair approximation · percolation · Sentinel-2 · MODIS</p>
+            <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/016-sahel-desertification">Read the write-up and code</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-016">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig1_hysteresis.png" alt="Vegetation cover as rainfall falls and rises again, for three strengths of facilitation"><figcaption>Vegetation cover as rainfall falls and rises again, for three strengths of facilitation</figcaption></figure>
+        </div>
+        <div class="ext" id="ext-016" hidden>
+          <div class="tabs" role="tablist" aria-label="Desertification in the Sahel sections">
+            <button type="button" role="tab" id="t-016-method" aria-controls="p-016-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-016-results" aria-controls="p-016-results" aria-selected="false" tabindex="-1">results</button>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="p-016-method" aria-labelledby="t-016-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Plants that help plants</h5><p>A three-state lattice; facilitation f couples each cell to its neighbours.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig1_hysteresis.png" alt="Plants that help plants" loading="lazy"><figcaption>Plants that help plants</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Theory against simulation</h5><p>Mean field and pair approximation beside the lattice.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig2_theory.png" alt="Theory against simulation" loading="lazy"><figcaption>Theory against simulation</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>The warning from above</h5><p>The largest patch&#x27;s share collapses before cover does; large patches vanish first.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig3_early_warning.png" alt="The warning from above" loading="lazy"><figcaption>The warning from above</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Real patterns</h5><p>Sentinel-2 NDVI at Gourma and Fakara beside the model lattice.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig4_patterns.png" alt="Real patterns" loading="lazy"><figcaption>Real patterns</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-016-results" aria-labelledby="t-016-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig1_hysteresis.png" alt="Hysteresis" loading="lazy"><figcaption>Hysteresis</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig2_theory.png" alt="Theory against simulation" loading="lazy"><figcaption>Theory against simulation</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig3_early_warning.png" alt="Early warning" loading="lazy"><figcaption>Early warning</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig4_patterns.png" alt="Patterns" loading="lazy"><figcaption>Patterns</figcaption></figure></div>
+          </div>
+          
         </div>
       </div></div>
     </li>
