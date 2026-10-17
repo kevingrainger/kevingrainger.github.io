@@ -486,19 +486,19 @@
     <li class="project" data-tag="markets">
       <button class="project-head" type="button" aria-expanded="false">
         <span class="num">007</span><span class="title">Italian power price volatility</span>
-        <span class="tag">Markets</span><span class="status">pipeline built</span>
+        <span class="tag">Markets</span><span class="status">complete</span>
       </button>
       <div class="more"><div>
         <div class="detail">
           <div class="text">
-            <p>Three stages: what drives the Italian power price (XGBoost and SHAP, with gas taken out first), what drives its volatility (GARCH-MIDAS), and how many months ahead a weather forecast still helps.</p>
-            <p>Built and checked on simulated data with planted relationships: the estimator is unbiased but imprecise, and a modest weather effect needs a long test period to detect. Real GME and ERA5 series next.</p>
+            <p>Three stages: what drives the Italian power price (XGBoost and SHAP, with gas taken out first), what drives its volatility (GARCH-MIDAS), and how much a weather forecast could add. Built and checked on simulated data with planted relationships, then run on real Italy North prices, Italian load and renewables, ERA5 temperature and TTF gas, 2018-2026.</p>
+            <p>On the real data the weather matters in the opposite direction to the published finding: months with more extreme days have calmer prices relative to gas, because in a heatwave gas plants set the price every hour. And even perfect knowledge of each month&#x27;s extremes lowers the volatility forecast loss by only 0.7%, the ceiling on what a seasonal forecast could be worth.</p>
             <p class="credit"><sup>&dagger;</sup>Builds on Guerzoni, Riso &amp; Zoia (2026). GARCH-MIDAS from Engle, Ghysels &amp; Sohn (2013).</p>
-            <p class="stack">Python · XGBoost · SHAP · GARCH-MIDAS · Diebold-Mariano</p>
+            <p class="stack">Python · XGBoost · SHAP · GARCH-MIDAS · QLIKE · Diebold-Mariano · Energy-Charts · ERA5</p>
             <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/007-italian-power-volatility">Read the write-up and code</a><br>
             <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-007">+ view more</button>
           </div>
-          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/cover.png" alt="Price history and a nine-month projection across 300 weather scenarios (simulated test data)"><figcaption>Price history and a nine-month projection across 300 weather scenarios (simulated test data)</figcaption></figure>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig5_real_price.png" alt="Italy North power and TTF gas, 2018-2026, with extreme-weather days per month"><figcaption>Italy North power and TTF gas, 2018-2026, with extreme-weather days per month</figcaption></figure>
         </div>
         <div class="ext" id="ext-007" hidden>
           <div class="tabs" role="tablist" aria-label="Italian power price volatility sections">
@@ -508,13 +508,13 @@
           </div>
           <div class="panel" role="tabpanel" id="p-007-method" aria-labelledby="t-007-method">
             <ol class="timeline">
-<li class="step"><div><h5><span class="sn">01</span>Weather to price</h5><p>Gas-relative target; SHAP recovers the heating and cooling U-shape.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig2_shap.png" alt="Weather to price" loading="lazy"><figcaption>Weather to price</figcaption></figure></li>
-<li class="step"><div><h5><span class="sn">02</span>Weather to volatility</h5><p>GARCH-MIDAS recovers the planted weather effect on average over ten simulated decades.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig3_midas_recovery.png" alt="Weather to volatility" loading="lazy"><figcaption>Weather to volatility</figcaption></figure></li>
-<li class="step"><div><h5><span class="sn">03</span>Forecast to volatility</h5><p>With a strong effect, forecasts help out to about 1-2 months.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/hero.png" alt="Forecast to volatility" loading="lazy"><figcaption>Forecast to volatility</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">01</span>Weather to price</h5><p>Price relative to gas; XGBoost beats a straight line on unseen years and SHAP finds a U-shape in temperature.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig6_real_shap.png" alt="Weather to price" loading="lazy"><figcaption>Weather to price</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Weather to volatility</h5><p>GARCH-MIDAS: the extreme-day count is significant, with a negative sign.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig7_real_volatility.png" alt="Weather to volatility" loading="lazy"><figcaption>Weather to volatility</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Method check</h5><p>On simulated data the estimator recovers the planted weather effect on average.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig3_midas_recovery.png" alt="Method check" loading="lazy"><figcaption>Method check</figcaption></figure></li>
             </ol>
           </div>
           <div class="panel" role="tabpanel" id="p-007-results" aria-labelledby="t-007-results" hidden>
-            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig1_price_and_weather.png" alt="Price and extreme weather" loading="lazy"><figcaption>Price and extreme weather</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig4_volatility_components.png" alt="Volatility components" loading="lazy"><figcaption>Volatility components</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig3_midas_recovery.png" alt="Estimator check" loading="lazy"><figcaption>Estimator check</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/hero.png" alt="Forecast horizon" loading="lazy"><figcaption>Forecast horizon</figcaption></figure></div>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig5_real_price.png" alt="Price, gas and extreme weather" loading="lazy"><figcaption>Price, gas and extreme weather</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig6_real_shap.png" alt="What drives the price" loading="lazy"><figcaption>What drives the price</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig7_real_volatility.png" alt="Volatility components" loading="lazy"><figcaption>Volatility components</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/007-italian-power-volatility/figures/fig3_midas_recovery.png" alt="Estimator check (simulated)" loading="lazy"><figcaption>Estimator check (simulated)</figcaption></figure></div>
           </div>
           <div class="panel" role="tabpanel" id="p-007-pipeline" aria-labelledby="t-007-pipeline" hidden>
             <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
