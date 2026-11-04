@@ -210,7 +210,7 @@
 
   <div class="section-head">
     <h2>Projects</h2>
-    <span id="count">16 / 16</span>
+    <span id="count">17 / 17</span>
   </div>
 
   <div class="filter" role="group" aria-label="Filter projects">
@@ -618,36 +618,37 @@
     </li>
     <li class="project" data-tag="markets">
       <button class="project-head" type="button" aria-expanded="false">
-        <span class="num">013</span><span class="title">Coffee, frost and the forward curve</span>
+        <span class="num">013</span><span class="title">How much of the coffee price is weather?</span>
         <span class="tag">Markets</span><span class="status">complete</span>
       </button>
       <div class="more"><div>
         <div class="detail">
           <div class="text">
-            <p>In July 2021 frost hit Brazil&#x27;s coffee belt and arabica rose by a third in a week. When a forecast warns of frost, does the price move with the warning or with the damage, and how far along the forward curve does it reach? A production-weighted frost index is built from ERA5 and from archived ECMWF and GFS forecasts, by lead time.</p>
-            <p>The market read the forecasts promptly: across 2021-2026 no reaction comes a day or two late, as Roll found for orange juice. But the largest move followed the frost night, once the damage was known. A Schwartz two-factor model fitted to the 2024-2026 curves puts the half-life of a convenience-yield shock at about three years.</p>
-            <p class="credit"><sup>&dagger;</sup>Builds on Roll (1984) and Schwartz (1997). Forecasts from ECMWF IFS and NOAA GFS via the Open-Meteo archive; ERA5 (<a href="https://doi.org/10.1002/qj.3803">Hersbach et al. 2020</a>). Prices from Yahoo Finance.</p>
-            <p class="stack">Python · Kalman filter · Schwartz two-factor model · event study · Newey-West · ECMWF and GFS forecast archive</p>
+            <p>Frost in Brazil makes the news, so I expected it to drive arabica. Across 26 years it barely registers: the days around a frost night carry 3% of the price variance, and of the fifteen biggest weekly moves since 2000 only July 2021 follows one. The forecasts are read promptly, as Roll found for orange juice, but frost is rare.</p>
+            <p>Month to month, the Brazilian real explains 9% of the moves and all the weather together under 2%: Vietnam&#x27;s robusta highlands 0.9%, Brazilian drought 0.5%, frost 0.07%. Slow droughts are undercounted by a monthly test, and the 2024-25 rally shows on the forward curve as backwardation of up to 40%.</p>
+            <p class="credit"><sup>&dagger;</sup>Builds on Roll (1984) and Schwartz (1997); Shapley (1953) for the decomposition. Forecasts from ECMWF IFS and NOAA GFS via the Open-Meteo archive; ERA5 (<a href="https://doi.org/10.1002/qj.3803">Hersbach et al. 2020</a>). Prices and the Brazilian real from Yahoo Finance.</p>
+            <p class="stack">Python · Shapley decomposition · Kalman filter · Schwartz two-factor model · event study · Newey-West · ERA5 · ECMWF and GFS forecast archive · folium</p>
             <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/013-coffee-forward-curves">Read the write-up and code</a><br>
             <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-013">+ view more</button>
           </div>
-          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig1_frost_2021.png" alt="July 2021: frost warnings in the forecasts, frost nights in ERA5, and the price of arabica"><figcaption>July 2021: frost warnings in the forecasts, frost nights in ERA5, and the price of arabica</figcaption></figure>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig4_timeline.png" alt="Arabica since 2000, with every frost night and dry spell marked"><figcaption>Arabica since 2000, with every frost night and dry spell marked</figcaption></figure>
         </div>
         <div class="ext" id="ext-013" hidden>
-          <div class="tabs" role="tablist" aria-label="Coffee, frost and the forward curve sections">
+          <div class="tabs" role="tablist" aria-label="How much of the coffee price is weather? sections">
             <button type="button" role="tab" id="t-013-method" aria-controls="p-013-method" aria-selected="true">method</button>
             <button type="button" role="tab" id="t-013-results" aria-controls="p-013-results" aria-selected="false" tabindex="-1">results</button>
             <button type="button" role="tab" id="t-013-pipeline" aria-controls="p-013-pipeline" aria-selected="false" tabindex="-1">pipeline</button>
           </div>
           <div class="panel" role="tabpanel" id="p-013-method" aria-labelledby="t-013-method">
             <ol class="timeline">
-<li class="step"><div><h5><span class="sn">01</span>A frost index</h5><p>Production-weighted cold below 5 C at eight regions, from ERA5 and from forecasts issued 1-7 days ahead.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig1_frost_2021.png" alt="A frost index" loading="lazy"><figcaption>A frost index</figcaption></figure></li>
-<li class="step"><div><h5><span class="sn">02</span>Line up the events</h5><p>Price paths around every frost night since 2000 and every first warning since 2021.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig2_events.png" alt="Line up the events" loading="lazy"><figcaption>Line up the events</figcaption></figure></li>
-<li class="step"><div><h5><span class="sn">03</span>Read the curve</h5><p>Schwartz&#x27;s model by Kalman filter: how far a convenience-yield shock reaches, and its path since 2024.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig3_curve.png" alt="Read the curve" loading="lazy"><figcaption>Read the curve</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">01</span>How rare is frost?</h5><p>Production-weighted cold below 5 C at eight Brazilian regions, every frost-season day since 1990.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig6_frost_calendar.png" alt="How rare is frost?" loading="lazy"><figcaption>How rare is frost?</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Is the warning priced?</h5><p>July 2021: the forecasts were read the same day, but the biggest move came with the damage reports.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig1_frost_2021.png" alt="Is the warning priced?" loading="lazy"><figcaption>Is the warning priced?</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>What moves the price?</h5><p>Monthly returns on frost, drought in Brazil and Vietnam, and the Brazilian real, split by Shapley values.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig7_drivers.png" alt="What moves the price?" loading="lazy"><figcaption>What moves the price?</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Read the curve</h5><p>Each live contract against the front month: deep backwardation through the 2024-25 rally.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig5_curve_heatmap.png" alt="Read the curve" loading="lazy"><figcaption>Read the curve</figcaption></figure></li>
             </ol>
           </div>
           <div class="panel" role="tabpanel" id="p-013-results" aria-labelledby="t-013-results" hidden>
-            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig1_frost_2021.png" alt="July 2021" loading="lazy"><figcaption>July 2021</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig2_events.png" alt="Event study" loading="lazy"><figcaption>Event study</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig3_curve.png" alt="The forward curve" loading="lazy"><figcaption>The forward curve</figcaption></figure></div>
+            <figure class="live"><iframe src="maps/013-coffee-belt.html" title="Interactive: the eight regions of the frost index on the worst frost nights since 1990." loading="lazy"></iframe><figcaption>Interactive: the eight regions of the frost index on the worst frost nights since 1990. <a href="maps/013-coffee-belt.html">Open full screen</a></figcaption></figure><div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig4_timeline.png" alt="26 years of arabica" loading="lazy"><figcaption>26 years of arabica</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig7_drivers.png" alt="What moves arabica" loading="lazy"><figcaption>What moves arabica</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig5_curve_heatmap.png" alt="The forward curve" loading="lazy"><figcaption>The forward curve</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/013-coffee-forward-curves/figures/fig2_events.png" alt="Event study" loading="lazy"><figcaption>Event study</figcaption></figure></div>
           </div>
           <div class="panel" role="tabpanel" id="p-013-pipeline" aria-labelledby="t-013-pipeline" hidden>
             <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
@@ -754,8 +755,8 @@
         <div class="detail">
           <div class="text">
             <p>Plants that help plants: the Kéfi lattice, in which bare soil recovers faster next to vegetation, the same neighbour coupling as the coral reef&#x27;s Potts model. With strong facilitation the way back from desert is longer than the way down, and the mean-field theory overstates the trap.</p>
-            <p>The vegetation stops connecting long before it disappears: the largest patch falls from 90% of all vegetation to 6% while cover is still near a half, well before the collapse. A satellite counting patch sizes would see the warning. Driven by real rainfall at Gourma and Fakara, the model shows that rain alone cannot explain which site re-greened: at Fakara, greenness has stopped following the rain, and land use decides.</p>
-            <p class="credit"><sup>&dagger;</sup>Builds on K&eacute;fi et al. (2007), Rietkerk et al. (2004) and Scanlon et al. (2007). Sites after Dardel et al. (2014). Contains modified Copernicus Sentinel-2 data; MODIS NDVI via the ORNL DAAC; ERA5 rainfall via Open-Meteo.</p>
+            <p>The vegetation stops connecting long before it disappears: the largest patch falls from 90% of all vegetation to 6% while cover is still near a half, well before the collapse. A satellite counting patch sizes would see the warning. Driven by CHIRPS rainfall at Gourma and Fakara (ERA5 turned out 35% too dry and checked poorly against IMERG), the 1980s drought dips below the tipping point but too briefly to tip the lattice, and rain alone cannot explain which site re-greened: at Fakara, greenness hardly follows the rain, and land use decides.</p>
+            <p class="credit"><sup>&dagger;</sup>Builds on K&eacute;fi et al. (2007), Rietkerk et al. (2004) and Scanlon et al. (2007). Sites after Dardel et al. (2014). Contains modified Copernicus Sentinel-2 data; MODIS NDVI via the ORNL DAAC; rainfall from CHIRPS (<a href="https://doi.org/10.1038/sdata.2015.66">Funk et al. 2015</a>) and IMERG V07 via Earth Engine, and ERA5 via Open-Meteo.</p>
             <p class="stack">Python · Numba cellular automaton · pair approximation · percolation · Sentinel-2 · MODIS</p>
             <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/016-sahel-desertification">Read the write-up and code</a><br>
             <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-016">+ view more</button>
@@ -774,11 +775,12 @@
 <li class="step"><div><h5><span class="sn">02</span>Theory against simulation</h5><p>Mean field and pair approximation beside the lattice.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig2_theory.png" alt="Theory against simulation" loading="lazy"><figcaption>Theory against simulation</figcaption></figure></li>
 <li class="step"><div><h5><span class="sn">03</span>The warning from above</h5><p>The largest patch&#x27;s share collapses before cover does; large patches vanish first.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig3_early_warning.png" alt="The warning from above" loading="lazy"><figcaption>The warning from above</figcaption></figure></li>
 <li class="step"><div><h5><span class="sn">04</span>Real patterns</h5><p>Sentinel-2 NDVI at Gourma and Fakara beside the model lattice.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig4_patterns.png" alt="Real patterns" loading="lazy"><figcaption>Real patterns</figcaption></figure></li>
-<li class="step"><div><h5><span class="sn">05</span>Real rain, real greenness</h5><p>The lattice driven by 1950-2025 rainfall, against MODIS greenness from 2000.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig5_sites.png" alt="Real rain, real greenness" loading="lazy"><figcaption>Real rain, real greenness</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">05</span>Which rain?</h5><p>ERA5, CHIRPS and IMERG over each site: ERA5 is too dry and follows the satellites poorly.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig6_rain_sources.png" alt="Which rain?" loading="lazy"><figcaption>Which rain?</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">06</span>Real rain, real greenness</h5><p>The lattice driven by CHIRPS rainfall, 1950-2025, against MODIS greenness from 2000.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig5_sites.png" alt="Real rain, real greenness" loading="lazy"><figcaption>Real rain, real greenness</figcaption></figure></li>
             </ol>
           </div>
           <div class="panel" role="tabpanel" id="p-016-results" aria-labelledby="t-016-results" hidden>
-            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig1_hysteresis.png" alt="Hysteresis" loading="lazy"><figcaption>Hysteresis</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig2_theory.png" alt="Theory against simulation" loading="lazy"><figcaption>Theory against simulation</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig3_early_warning.png" alt="Early warning" loading="lazy"><figcaption>Early warning</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig5_sites.png" alt="Two sites" loading="lazy"><figcaption>Two sites</figcaption></figure></div>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig1_hysteresis.png" alt="Hysteresis" loading="lazy"><figcaption>Hysteresis</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig2_theory.png" alt="Theory against simulation" loading="lazy"><figcaption>Theory against simulation</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig3_early_warning.png" alt="Early warning" loading="lazy"><figcaption>Early warning</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig5_sites.png" alt="Two sites" loading="lazy"><figcaption>Two sites</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/016-sahel-desertification/figures/fig6_rain_sources.png" alt="Three rainfall products" loading="lazy"><figcaption>Three rainfall products</figcaption></figure></div>
           </div>
           <div class="panel" role="tabpanel" id="p-016-pipeline" aria-labelledby="t-016-pipeline" hidden>
             <p class="hint">Hover or tab to a box to trace everything that feeds into it and everything it feeds.</p>
@@ -786,6 +788,46 @@
             <h5 class="flow-head">How the data flows</h5>
             <p class="flow-note">The last project of the portfolio: the coral model&#x27;s maths on land.</p><ol class="flow"><li><b>Theory.</b> Mean-field and pair-approximation equations for the three-state model.</li><li><b>Model.</b> A Numba lattice of vegetated, empty and degraded cells, with facilitation f.</li><li><b>Signals.</b> Hysteresis loops, and patch sizes and spanning clusters as the landscape dries.</li><li><b>Real sites.</b> Gourma and Fakara: ERA5 rain drives the lattice, MODIS and Sentinel-2 check it.</li><li><b>Output.</b> How far theory overstates the trap, an early warning visible from space, and why rain alone cannot explain which site re-greened.</li></ol>
           </div>
+        </div>
+      </div></div>
+    </li>
+    <li class="project" data-tag="physics">
+      <button class="project-head" type="button" aria-expanded="false">
+        <span class="num">000</span><span class="title">Metal-porphyrin chains by density functional theory</span>
+        <span class="tag">Physics</span><span class="status">capstone</span>
+      </button>
+      <div class="more"><div>
+        <div class="detail">
+          <div class="text">
+            <p>My undergraduate capstone at Trinity, supervised by Cormac McGuinness: metal porphyrins fused into one-dimensional chains, calculated in FHI-aims. The question was whether the way the units are joined decides if a chain carries a spin, and whether one molecule bound to the metal can switch it.</p>
+            <p>The bridge decides. Weakly joined chains grow unpaired electrons on their carbon backbone, the open-shell character later measured on gold for the same molecules, while fully fused ones pair them up. One oxygen on the metal overrides all of it: every iron chain settles at S = 1 on Fe=O and every vanadium chain at a single S = ½ on V=O, with the backbone spin gone and the gap still set by the bridge.</p>
+            <p class="credit"><sup>&dagger;</sup>Builds on the open-shell porphyrins of <a href="https://doi.org/10.1021/jacs.0c07781">Sun, Mateo, Robles et al. (2020)</a> and <a href="https://doi.org/10.1002/advs.202105906">Sun et al. (2022)</a>; compared with <a href="https://doi.org/10.1038/s42005-023-01231-y">Gao, Mench&oacute;n, Garcia-Lekue &amp; Brandbyge (2023)</a> and the chemical spin switch of W&auml;ckerlin et al. (2010). FHI-aims from Blum et al. (2009).</p>
+            <p class="stack">FHI-aims · spin-polarised DFT · Kohn-Sham · Mulliken analysis · Python · matplotlib</p>
+            <a class="gh" href="https://github.com/kevingrainger/Portfolio/tree/main/earlier-work/dft-porphyrin-networks">Read the write-up and code</a><br>
+            <button class="view-more" type="button" aria-expanded="false" aria-controls="ext-000">+ view more</button>
+          </div>
+          <figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/cover_znextra_homo.png" alt="The highest occupied orbital of the extra-strongly fused zinc chain"><figcaption>The highest occupied orbital of the extra-strongly fused zinc chain</figcaption></figure>
+        </div>
+        <div class="ext" id="ext-000" hidden>
+          <div class="tabs" role="tablist" aria-label="Metal-porphyrin chains by density functional theory sections">
+            <button type="button" role="tab" id="t-000-method" aria-controls="p-000-method" aria-selected="true">method</button>
+            <button type="button" role="tab" id="t-000-results" aria-controls="p-000-results" aria-selected="false" tabindex="-1">results</button>
+            
+          </div>
+          <div class="panel" role="tabpanel" id="p-000-method" aria-labelledby="t-000-method">
+            <ol class="timeline">
+<li class="step"><div><h5><span class="sn">01</span>Start from one molecule</h5><p>Plain porphyrin, then four and two fused arms. The two-arm molecule&#x27;s gap collapses, the sign of two unpaired electrons.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig4_zinc_molecule_orbitals.png" alt="Start from one molecule" loading="lazy"><figcaption>Start from one molecule</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">02</span>Give the molecule a magnetic metal</h5><p>Iron, manganese, cobalt and vanadium: two fused arms add about 2 μB on the ring aligned with the metal, as measured for iron on gold.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig10_molecule_spin_by_metal.png" alt="Give the molecule a magnetic metal" loading="lazy"><figcaption>Give the molecule a magnetic metal</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">03</span>Join them into chains</h5><p>Weak, strong and extra-strong bridges. Only the fully fused backbone carries its HOMO the whole length of the chain.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig3_zinc_chain_orbitals.png" alt="Join them into chains" loading="lazy"><figcaption>Join them into chains</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">04</span>Put the metal in the chain</h5><p>In the vanadium and iron chains the metal&#x27;s d orbital sits at the frontier.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig6_vanadium_chain_orbitals.png" alt="Put the metal in the chain" loading="lazy"><figcaption>Put the metal in the chain</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">05</span>Bind an oxygen to the metal</h5><p>Bare chains disagree about where the spin sits; with Fe=O or V=O every chain lands in the same local spin state.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig8_oxo_spin_by_element.png" alt="Bind an oxygen to the metal" loading="lazy"><figcaption>Bind an oxygen to the metal</figcaption></figure></li>
+<li class="step"><div><h5><span class="sn">06</span>See why</h5><p>The metal&#x27;s states move away from the chemical potential, leaving the spin on the metal-oxo unit and the conduction in the carbon bands.</p></div><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig9_oxo_spin_dos.png" alt="See why" loading="lazy"><figcaption>See why</figcaption></figure></li>
+            </ol>
+          </div>
+          <div class="panel" role="tabpanel" id="p-000-results" aria-labelledby="t-000-results" hidden>
+            <div class="results"><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig8_oxo_spin_by_element.png" alt="Where the spin sits, bare and with O on the metal" loading="lazy"><figcaption>Where the spin sits, bare and with O on the metal</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig9_oxo_spin_dos.png" alt="Spin-resolved density of states" loading="lazy"><figcaption>Spin-resolved density of states</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig10_molecule_spin_by_metal.png" alt="Spin on the metal and the ring, four metals" loading="lazy"><figcaption>Spin on the metal and the ring, four metals</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig7_feo_ribbon_orbitals.png" alt="An Fe=O porphyrin in a graphene nanoribbon" loading="lazy"><figcaption>An Fe=O porphyrin in a graphene nanoribbon</figcaption></figure><figure><img src="https://raw.githubusercontent.com/kevingrainger/Portfolio/main/earlier-work/dft-porphyrin-networks/figures/fig1_molecule_gaps.png" alt="Single-molecule gaps" loading="lazy"><figcaption>Single-molecule gaps</figcaption></figure></div>
+          </div>
+          
         </div>
       </div></div>
     </li>
