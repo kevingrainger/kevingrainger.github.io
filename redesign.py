@@ -30,7 +30,7 @@ PICK = {
 }
 
 SUMMARY = {
-"001": "My undergraduate capstone at Trinity College Dublin, supervised by Prof. Cormac McGuinness: modelling the spin and energy gap of metal-porphyrin nano-networks with density functional theory, in FHI-aims. The bridge between units decides whether a bare chain is magnetic. One oxygen bound to the metal overrides the bridge, leaving a single local spin and a gap the bridge still sets. A spin that switches when a molecule binds is the mechanism a chemical sensor needs.",
+"001": "My undergraduate capstone at Trinity College Dublin, in Prof. Cormac McGuinness's Surface, Interface Physics &amp; X-ray Spectroscopy Group. The aim was to find the band gap of metal-porphyrin chains and where their HOMO and LUMO states are located, using density functional theory in FHI-aims.</p><p>The project found that the carbon bridge between unit cells in the 1D chain can change the HOMO-LUMO gap, where the frontier states are located and whether the chain is magnetic. In zinc chains a fully fused bridge carries the HOMO along the whole chain, while a weak bridge leaves it on each unit. With iron and vanadium centres the metal's d orbitals move into the gap and shorten it, so the frontier states are on the metal. Weakly bonded chains carry unpaired electrons on their carbon backbone, while more strongly fused chains tend to pair them up. The simulations point to the weak bridge keeping each unit's orbitals separate, so each porphyrin keeps the unpaired electrons it has as a single molecule, while fusing joins them into bands along the chain.</p><p>Furthermore, it was found that an oxygen bound to the central metal can override the effect of the carbon bridge. The backbone spin disappears, leaving a single local spin on the metal-oxygen unit (S = 1 for iron, S = ½ for vanadium), and the HOMO-LUMO gap widens, from 0.34 to 0.64 eV in the fully fused iron chain.</p><p>This points towards potential for chemical sensors and molecular electronics, both of great interest with porphyrins (Paolesse et al., 2017), given the graphene-like conduction that fused porphyrin chains can display (Gao et al., 2023).",
 "002": "A rebuilt agent-based model of Xylella spreading through an olive grove, carried from tree to tree by spittlebugs, light enough to be run and tuned many more times. Outbreaks are usually fatal: 39 of 40 take the whole grove. Below roughly 16% infection per visit outbreaks die out, and with trees 6 to 8 cells apart they stop taking the grove. None of the felling patterns slowed the spread.",
 "003": "This project models a reef much as physics models a magnet: a Potts-style lattice of healthy coral, bleached coral, bare rock and seaweed. Reefs get stuck: once heat kills enough coral, cooling the water back down does not bring it back. Fitted by simulation-based inference to 65 AIMS surveys of Scott Reef in 2016, two very different reefs reproduce the surveys equally well, and they tip at +1.1 to 1.7 °C.",
 "004": "Kéfi et al.'s probabilistic cellular automaton for drylands, the same neighbour coupling as the coral reef's Potts model. Recovering from desert takes much more rainfall than the collapse did, and the patch structure warns of decline well before cover falls. Driven by real rain at two field sites and 223 grid sites, and played beside forty years of Landsat and Sentinel-2, rain alone cannot explain which land re-greened: land use decides more of it.",
@@ -82,6 +82,12 @@ CSS = """
     .detail .gh, .detail .view-more { font-size: .74rem; }
     .infull { max-width: 46rem; margin: 0 0 2rem; }
     .infull p { font-size: .86rem; line-height: 1.7; margin: 0 0 .8rem; }
+    .infull ul.abs { font-size: .86rem; line-height: 1.65; margin: 0 0 .9rem; padding-left: 1.1rem; }
+    .infull ul.abs li { margin: 0 0 .4rem; }
+    .infull p.eq { font-family: 'Cambria Math', 'STIX Two Math', Georgia, serif; font-size: .95rem; text-align: center; margin: .2rem 0 1rem; }
+    .step p + p, .step ul + p, .step p + ul { margin-top: .6rem; }
+    .step ul { margin: 0; padding-left: 1.1rem; font-size: .84rem; line-height: 1.6; }
+    .step ul li { margin: 0 0 .3rem; }
     .gallery { float: right; width: 52%; margin: .25rem 0 1rem 2.25rem;
                display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
     .detail.flip .gallery { float: left; margin: .25rem 2.25rem 1rem 0; }
@@ -125,7 +131,7 @@ def apply(page, base):
             num = re.search(r'<span class="num">(\d+)', block).group(1)
             tm = re.search(r'(<div class="text">)(.*?)(<p class="(?:credit|stack)")', block, re.S)
             if num in SUMMARY and tm:
-                paras = re.findall(r'<p>.*?</p>', tm.group(2), re.S)
+                paras = re.findall(r'<p(?: class="eq")?>.*?</p>|<ul class="abs">.*?</ul>', tm.group(2), re.S)
                 body = tm.group(2)
                 for para in paras:
                     body = body.replace(para, "", 1)
