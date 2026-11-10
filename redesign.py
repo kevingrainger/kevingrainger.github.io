@@ -88,6 +88,7 @@ CSS = """
     .step p + p, .step ul + p, .step p + ul { margin-top: .6rem; }
     .step ul { margin: 0; padding-left: 1.1rem; font-size: .84rem; line-height: 1.6; }
     .step ul li { margin: 0 0 .3rem; }
+    .step .figs { display: flex; flex-direction: column; gap: 1.4rem; min-width: 0; }
     .gallery { float: right; width: 52%; margin: .25rem 0 1rem 2.25rem;
                display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
     .detail.flip .gallery { float: left; margin: .25rem 2.25rem 1rem 0; }
