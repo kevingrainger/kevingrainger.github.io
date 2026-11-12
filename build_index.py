@@ -546,7 +546,9 @@ def main():
             base.replace("raw.githubusercontent.com", "github.com").replace("/main/", "/tree/main/") + p["folder"]
         items.append(project_html(p, base, credit, pipeline_panel, repo_link))
 
-    after = end + len("</ul>")
+    after = end + len("  </ul>")
+    while page.startswith("l>", after):   # leftovers of an earlier off-by-two splice
+        after += 2
     new_page = page[:start] + "\n" + "\n".join(items) + "\n  </ul>" + page[after:]
     new_page = new_page.replace("</head>", EXTRA_CSS, 1)
     #filter button for the undergraduate physics projects, and the right count before the script runs
